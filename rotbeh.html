@@ -1,0 +1,2035 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>محاسبه‌گر امتیاز رتبه‌بندی معلمان (نسخه معلم) — اداره کل آموزش و پرورش آذربایجان شرقی</title>
+  <style>
+    :root{
+      --bg:#f7f7f9; --card:#ffffff; --text:#111827; --muted:#6b7280;
+      --border:#e5e7eb; --accent:#2563eb; --ok:#16a34a; --warn:#b45309; --bad:#dc2626;
+      --shadow:0 10px 25px rgba(0,0,0,.06);
+      --radius:14px;
+    }
+    body{margin:0;background:var(--bg);color:var(--text);font-family:Tahoma, "Segoe UI", Arial, sans-serif;}
+    .wrap{max-width:1180px;margin:24px auto;padding:0 14px;}
+    header{display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;}
+    h1{margin:0;font-size:20px;}
+    .sub{color:var(--muted);font-size:13px;line-height:1.7;margin-top:6px;}
+    .card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);}
+    .tabs{display:flex;gap:8px;flex-wrap:wrap;padding:10px;border-bottom:1px solid var(--border);}
+    .tabbtn{
+      cursor:pointer;border:1px solid var(--border);background:#fff;color:var(--text);
+      padding:8px 12px;border-radius:999px;font-size:13px;
+    }
+    .tabbtn.active{border-color:var(--accent);color:var(--accent);font-weight:800;}
+    .content{padding:14px;}
+    .grid{display:grid;grid-template-columns:1fr;gap:12px;}
+    @media (min-width: 980px){ .grid.two{grid-template-columns:1fr 1fr;} }
+    .panel{border:1px solid var(--border);border-radius:12px;padding:12px;background:#fff;}
+    .panel h2{margin:0 0 10px 0;font-size:15px;}
+    .hint{color:var(--muted);font-size:12.5px;line-height:1.6;margin-top:6px;}
+    .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;}
+    .pill{display:inline-flex;gap:8px;align-items:center;border:1px solid var(--border);border-radius:999px;padding:6px 10px;background:#fff;font-size:12.5px;color:var(--muted);}
+    .pill strong{color:var(--text);}
+    .scorebox{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-start;justify-content:space-between;}
+    .pillline{display:flex;gap:8px;flex-wrap:wrap;align-items:center;}
+    .badge{display:inline-block;padding:4px 10px;border-radius:999px;font-size:12px;font-weight:900;border:1px solid var(--border);background:#fff;}
+    .badge.ok{border-color:rgba(22,163,74,.35);background:rgba(22,163,74,.08);color:var(--ok);}
+    .badge.warn{border-color:rgba(180,83,9,.35);background:rgba(180,83,9,.08);color:var(--warn);}
+    .badge.bad{border-color:rgba(220,38,38,.35);background:rgba(220,38,38,.08);color:var(--bad);}
+    .help-btn{
+      cursor:pointer;border:none;border-radius:999px;padding:6px 10px;font-size:12px;font-weight:900;
+      background:#f59e0b;color:#fff;display:inline-flex;align-items:center;gap:6px;
+    }
+    .help-btn:focus{outline:2px solid rgba(245,158,11,.4);outline-offset:2px;}
+    .help-box{display:none;margin-top:10px;}
+    .help-box.open{display:block;}
+    details.notice{border:1px solid var(--border);border-radius:12px;padding:10px;background:#fff;margin-top:8px;}
+    details.notice summary{cursor:pointer;font-weight:800;list-style:none;}
+    details.notice summary::-webkit-details-marker{display:none;}
+    details.notice[open]{background:#f9fafb;}
+    table{width:100%;border-collapse:separate;border-spacing:0;overflow:hidden;border:1px solid var(--border);border-radius:12px;}
+    th,td{padding:10px 10px;border-bottom:1px solid var(--border);font-size:13px;vertical-align:top;}
+    th{background:#f9fafb;text-align:right;font-weight:800;}
+    tr:last-child td{border-bottom:none;}
+    .chk{display:flex;gap:10px;align-items:flex-start;}
+    .chk input{margin-top:3px;}
+    .small{font-size:12px;color:var(--muted);line-height:1.6;}
+    .num{width:110px;padding:8px;border:1px solid var(--border);border-radius:10px;font-size:13px;}
+    .num.wide{width:170px;}
+    .num.wider{width:260px;}
+    .select{padding:8px;border:1px solid var(--border);border-radius:10px;font-size:13px;background:#fff;}
+    .btnbar{display:flex;gap:10px;flex-wrap:wrap;}
+    button.action{
+      cursor:pointer;border:none;border-radius:12px;padding:10px 12px;
+      background:var(--accent);color:#fff;font-weight:900;font-size:13px;
+    }
+    button.ghost{
+      cursor:pointer;border:1px solid var(--border);border-radius:12px;padding:10px 12px;
+      background:#fff;color:var(--text);font-weight:900;font-size:13px;
+    }
+    .footerNote{margin-top:12px;color:var(--muted);font-size:12.5px;line-height:1.7;}
+    .mutedBox{background:#f9fafb;border:1px dashed var(--border);border-radius:12px;padding:10px;font-size:12.5px;color:var(--muted);line-height:1.7;}
+    .inlineWarn{color:var(--warn);font-weight:800;}
+    .inlineBad{color:var(--bad);font-weight:900;}
+    .inlineOk{color:var(--ok);font-weight:800;}
+    @media print{
+      .tabs,.btnbar{display:none !important;}
+      body{background:#fff;}
+      .card{box-shadow:none;}
+    }
+  </style>
+</head>
+
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <h1>محاسبه‌گر امتیاز رتبه‌بندی معلمان (نسخه معلم) — <span style="color:var(--accent);font-weight:900">اداره کل آموزش و پرورش آذربایجان شرقی</span></h1>
+      <div class="sub">
+        ✅ نسخه قواعد بر اساس راهنمای رسمی ۱۴۰۴/۱۰/۲۴ تنظیم شده است.<br/>
+        ✅ هر ردیف دو ستون دارد: «حداکثر امتیاز» و «امتیاز مکتسبه».<br/>
+        ✅ با تیک‌زدن، امتیاز مکتسبه به‌طور پیش‌فرض «حداکثر» می‌شود، اما شما می‌توانید دستی کمتر/بیشتر وارد کنید (بیشتر از حد مجاز هشدار می‌دهد و اصلاح می‌شود).<br/>
+        ✅ در هر بخش سقف‌ها کنترل می‌شود و «امتیاز تا اینجا» + «باقی‌مانده تا سقف» نمایش داده می‌شود.
+      </div>
+    </div>
+    <div class="btnbar">
+      <button class="ghost" id="btnReset">پاک‌کردن همه</button>
+      <button class="action" id="btnPrint">چاپ / ذخیره PDF</button>
+    </div>
+  </header>
+
+  <div class="card" style="margin-top:14px;">
+    <div class="tabs">
+      <button class="tabbtn active" data-tab="tab-base">اطلاعات پایه</button>
+      <button class="tabbtn" data-tab="tab-general">شایستگی عمومی</button>
+      <button class="tabbtn" data-tab="tab-special">شایستگی تخصصی</button>
+      <button class="tabbtn" data-tab="tab-professional">شایستگی حرفه‌ای</button>
+      <button class="tabbtn" data-tab="tab-experience">شایستگی تجربه</button>
+      <button class="tabbtn" data-tab="tab-summary">جمع‌بندی و رتبه احتمالی</button>
+      <button class="tabbtn" data-tab="tab-sources">منابع و قوانین</button>
+    </div>
+
+    <div class="content">
+      <!-- BASE INFO -->
+      <section id="tab-base" class="tab">
+        <div class="grid two">
+          <div class="panel">
+            <h2>اطلاعات پایه برای جمع‌بندی</h2>
+            <div class="hint" style="color:var(--accent);font-weight:800">این اطلاعات برای «شرط سنوات» و بخش «تجربه» استفاده می‌شود.</div>
+            <div class="row" style="margin-top:10px">
+              <label class="pill">سنوات خدمت (سال):
+                <input class="num" id="yearsService" type="number" min="0" max="60" value="0" />
+              </label>
+              <label class="pill">مدت خدمت مشمول تعجیل (ماه):
+                <input class="num" id="accelEligibleMonths" type="number" min="0" max="720" step="1" value="0" />
+              </label>
+              <label class="pill">میانگین ارزشیابی ۵ سال (۰ تا ۱۰۰):
+                <input class="num" id="avgEval" type="number" min="0" max="100" value="0" />
+              </label>
+              <label class="pill">هدف (برای سقف بعضی امتیازات تشویقی):
+                <select class="select" id="targetRank">
+                  <option value="moarabi">مربی‌معلم</option>
+                  <option value="ostadyar">استادیارمعلم</option>
+                  <option value="daneshyar">دانشیارمعلم</option>
+                  <option value="ostad">استادمعلم</option>
+                </select>
+              </label>
+            </div>
+
+            <div class="row" style="margin-top:10px">
+              <span class="pill">تعجیل محاسبه‌شده: <strong id="accelMonths">0</strong> ماه (<strong id="accelYearsOut">0</strong> سال)</span>
+              <span class="pill">سنوات مؤثر: <strong id="effectiveYears">0</strong> سال</span>
+            </div>
+            <div class="small">تعجیل: هر ۱۲ ماه خدمت مشمول = ۳ ماه کاهش سنوات لازم (در بازه رتبه فعلی تا استحقاق).</div>
+            <div class="small" id="accelWarn"></div>
+
+            <div class="mutedBox" style="margin-top:12px">
+              <b>نکته مهم:</b> احراز رتبه فقط با «جمع کل» نیست؛ باید <b>هر شایستگی</b> حداقل همان رتبه را جداگانه کسب کند.
+            </div>
+          </div>
+
+          <div class="panel">
+            <h2>اطلاعات شخصی (اختیاری)</h2>
+            <div class="hint">این بخش فقط برای نمایش در «کارنامه رتبه‌بندی» است و محاسبات را تغییر نمی‌دهد.</div>
+            <div class="row" style="margin-top:10px">
+              <label class="pill">نام:
+                <input class="num wide" id="personName" type="text" value="حسین" />
+              </label>
+              <label class="pill">نام خانوادگی:
+                <input class="num wide" id="personFamily" type="text" value="مرسلی" />
+              </label>
+              <label class="pill">کد ملی:
+                <input class="num wide" id="personNationalId" type="text" />
+              </label>
+              <label class="pill">شماره پرسنلی:
+                <input class="num wide" id="personPersonnelId" type="text" />
+              </label>
+              <label class="pill">منطقه/ناحیه:
+                <input class="num wide wider" id="personRegion" type="text" value="اداره کل آموزش و پرورش استان آذربایجان شرقی" />
+              </label>
+              <label class="pill">مدرسه/واحد:
+                <input class="num wide" id="personSchool" type="text" />
+              </label>
+              <label class="pill">شماره تماس:
+                <input class="num wide" id="personPhone" type="text" value="09141006030" />
+              </label>
+              <label class="pill">مدرک تحصیلی:
+                <select class="select" id="personDegreeLevel">
+                  <option value="0">انتخاب نشده</option>
+                  <option value="30">دیپلم (۳۰)</option>
+                  <option value="50">کاردانی (۵۰)</option>
+                  <option value="70">کارشناسی (۷۰)</option>
+                  <option value="90">کارشناسی ارشد (۹۰)</option>
+                  <option value="110">دکتری (۱۱۰)</option>
+                </select>
+              </label>
+              <label class="pill">
+                <input id="personDegreeTeacherUniBonus" type="checkbox" />
+                اخذ مدرک از دانشسرا/تربیت‌معلم/فرهنگیان/شهیدرجایی (۲۰)
+              </label>
+            </div>
+            <div class="small" style="color:var(--accent);font-weight:800">اطلاعات مدرک و محل تحصیل مدرک در بخش «مدرک تحصیلی» و بخش «شایستگی تخصصی» استفاده می‌شود.</div>
+            <div class="small" id="degreeSyncWarnBase"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- GENERAL -->
+      <section id="tab-general" class="tab" style="display:none;">
+        <div class="grid two">
+          <div class="panel">
+            <div class="scorebox">
+              <div>
+                <h2>رفتاری (حداکثر ۲۰۰)</h2>
+                <div class="hint">
+                  گزینه‌هایی را تیک بزنید که واقعاً برای شما قابل احراز/اثبات است.
+                  اگر احساس می‌کنید در یک گزینه «حداکثر» را ندارید، در ستون «امتیاز مکتسبه» کمتر وارد کنید.
+                </div>
+              </div>
+              <div class="pillline">
+                <span class="badge" id="generalRemainBadge">باقی‌مانده تا سقف: 200</span>
+                <span class="badge ok" id="generalSoFar">امتیاز شما تا اینجا: 0</span>
+                <span class="pill"><strong id="generalTotal">0</strong> / 200</span>
+                <button class="help-btn" type="button" data-help="help-general" aria-expanded="false">؟ راهنما</button>
+              </div>
+            </div>
+
+            <table id="tblGeneral"></table>
+
+            <div class="help-box mutedBox" id="help-general" style="margin-top:10px">
+              <b>راهنمای تکمیل (شایستگی عمومی):</b><br/>
+              • این بخش شامل صفات و رفتارهای عمومی حرفه معلمی است؛ هر ردیف سقف امتیاز مشخص دارد.<br/>
+              • امتیاز مکتسبه باید واقع‌بینانه و قابل استناد باشد؛ اگر حداکثر را ندارید، عدد کمتر وارد کنید.<br/>
+              • ارزیابی رفتاری در سامانه توسط «مدیر مستقیم» انجام می‌شود و باید با مشاهده واقعی عملکرد منطبق باشد.<br/>
+              • حداقل امتیاز لازم: مربی ۱۰۰ | استادیار ۱۲۰ | دانشیار ۱۴۰ | استاد ۱۶۰.<br/>
+              • مستندات/شواهد باید مرتبط و در بازه زمانی رتبه فعلی تا تاریخ استحقاق رتبه جدید باشد.
+            </div>
+
+            <div class="footerNote">
+              حداقل امتیاز لازم در «عمومی»: مربی ۱۰۰ | استادیار ۱۲۰ | دانشیار ۱۴۰ | استاد ۱۶۰
+            </div>
+          </div>
+
+        </div>
+      </section>
+      <!-- SPECIAL -->
+      <section id="tab-special" class="tab" style="display:none;">
+        <div class="grid two">
+          <div class="panel">
+            <div class="scorebox">
+              <div>
+                <h2>رفتاری (حداکثر ۸۰)</h2>
+                <div class="hint">در ستون «امتیاز مکتسبه» می‌توانید به‌صورت دستی کمتر از حدّاکثر وارد کنید.</div>
+              </div>
+              <div class="pillline">
+                <span class="badge" id="specialBehaviorRemainBadge">باقی‌مانده تا سقف: 80</span>
+                <span class="badge ok" id="specialBehaviorSoFar">امتیاز شما تا اینجا: 0</span>
+                <span class="pill"><strong id="specialBehaviorTotal">0</strong> / 80</span>
+                <button class="help-btn" type="button" data-help="help-special-behavior" aria-expanded="false">؟ راهنما</button>
+              </div>
+            </div>
+            <table id="tblSpecialBehavior"></table>
+            <div class="help-box mutedBox" id="help-special-behavior" style="margin-top:10px">
+              <b>راهنمای تکمیل (رفتاری تخصصی):</b><br/>
+              • تمرکز این بخش بر دانش تخصصی، روش‌ها و منابع تدریس و اسناد بالادستی است.<br/>
+              • هر ردیف سقف امتیاز مشخص دارد؛ در صورت عدم احراز کامل، امتیاز کمتر وارد شود.<br/>
+              • امتیاز باید با شواهد حرفه‌ای/ارزیابی‌های معتبر قابل تایید باشد.<br/>
+              • منابع به‌روز و اسناد تحولی/اجرایی مرتبط با درس از معیارهای اصلی این بخش است.
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="scorebox">
+              <div>
+                <h2>سندی (حداکثر ۱۷۰)</h2>
+                <div class="hint">سقف‌های زیر‌بخش‌ها و سقف کل سندی کنترل می‌شود.</div>
+              </div>
+              <div class="pillline">
+                <span class="badge" id="specialDocRemainBadge">باقی‌مانده تا سقف: 170</span>
+                <span class="badge ok" id="specialDocSoFar">امتیاز شما تا اینجا: 0</span>
+                <span class="pill"><strong id="specialDocTotal">0</strong> / 170</span>
+              </div>
+            </div>
+
+            <div class="panel" style="margin-top:10px;">
+              <div class="scorebox">
+                <h2>۱) تولید و ساخت (سقف ۳۰)</h2>
+                <div class="pillline">
+                  <span class="badge" id="spRemain">باقی‌مانده تا سقف: 30</span>
+                  <span class="badge ok" id="spSoFar">امتیاز تا اینجا: 0</span>
+                  <span class="badge" id="spDocsBadge">تعداد سندها: 0 / 4</span>
+                  <button class="help-btn" type="button" data-help="help-prod" aria-expanded="false">؟ راهنما</button>
+                </div>
+              </div>
+              <div class="small">امتیاز این بخش با سقف ۳۰ محاسبه می‌شود؛ اگر از سقف بالاتر رود، هشدار داده می‌شود.</div>
+              <table id="tblSpecialProduction"></table>
+              <div class="small" id="spWarn"></div>
+              <div class="small" id="spDocWarn"></div>
+
+              <div class="help-box mutedBox" id="help-prod" style="margin-top:10px">
+                <b>راهنمای تکمیل (تولید و ساخت):</b><br/>
+                • سقف کل این بخش: ۳۰ امتیاز؛ حداکثر مجموع اسناد: ۴ مورد (هر بند حداکثر ۲ مورد).<br/>
+                • هر سند فقط در یک بخش بارگذاری شود؛ اسناد تکراری رد می‌شوند.<br/>
+                • ساخت ابزارها و تجهیزات آموزشی/تربیتی/ورزشی/اداری — مرجع: منطقه/استان/ستاد — گواهی دارای امضا، شماره و تاریخ از ادارات آموزش‌وپرورش شهرستان/منطقه/ناحیه/استان/ستاد و سازمان پژوهش و برنامه‌ریزی آموزشی.<br/>
+                • طراحی و تولید نرم‌افزارهای آموزشی/تربیتی/ورزشی/اداری — مرجع: منطقه/استان/ستاد — ویژگی سند مانند بند قبل.<br/>
+                • ساخت وسایل کمک‌آموزشی و کمک‌ توانبخشی — مرجع: مدرسه/منطقه/استان/ستاد — گواهی دارای امضا، شماره و تاریخ از مدیران مدارس/ادارات آموزش‌وپرورش و سازمان‌های معتبر (از جمله آموزش‌وپرورش استثنایی).<br/>
+                • آشنایی با ابزار/تجهیزات/تکنیک‌های نوین — مرجع: مدرسه/منطقه/استان/ستاد — گواهی دارای امضا، شماره و تاریخ از مدیران مدارس/ادارات آموزش‌وپرورش.<br/>
+                • تولید محتوا در فضای مجازی، طراحی/تولید/تدوین بسته‌های یادگیری و درسنامه — مرجع: مدرسه/منطقه/استان/ستاد — گواهی دارای امضا، شماره و تاریخ از مدیران مدارس/ادارات آموزش‌وپرورش و سازمان‌های تابعه.
+              </div>
+            </div>
+
+            <div class="panel" style="margin-top:10px;">
+              <div class="scorebox">
+                <h2>۲) آخرین مدرک تحصیلی</h2>
+                <div class="pillline">
+                  <span class="badge ok" id="degSoFar">امتیاز تا اینجا: 0</span>
+                  <button class="help-btn" type="button" data-help="help-degree" aria-expanded="false">؟ راهنما</button>
+                </div>
+              </div>
+            <div class="small">مدرک پایه + (در صورت انتخاب) امتیاز دانشگاه‌های تربیت‌معلم/فرهنگیان/شهید رجایی.</div>
+            <div class="row" style="margin-top:10px">
+              <label class="pill">مدرک:
+                <select class="select" id="degreeLevel">
+                  <option value="0">انتخاب نشده</option>
+                  <option value="30">دیپلم (۳۰)</option>
+                  <option value="50">کاردانی (۵۰)</option>
+                  <option value="70">کارشناسی (۷۰)</option>
+                  <option value="90">کارشناسی ارشد (۹۰)</option>
+                  <option value="110">دکتری (۱۱۰)</option>
+                </select>
+              </label>
+              <label class="pill">
+                <input id="degreeTeacherUniBonus" type="checkbox" />
+                اخذ مدرک از دانشسرا/تربیت‌معلم/فرهنگیان/شهیدرجایی (۲۰)
+              </label>
+            </div>
+            <div class="small" id="degreeSyncWarn"></div>
+            <div class="help-box mutedBox" id="help-degree" style="margin-top:10px">
+              <b>راهنمای تکمیل (مدرک تحصیلی):</b><br/>
+              • امتیاز مدرک بر اساس آخرین مدرک تحصیلی محاسبه می‌شود.<br/>
+              • در صورت اخذ مدرک از دانشسرا/تربیت‌معلم/فرهنگیان/شهیدرجایی، ۲۰ امتیاز افزوده می‌شود.<br/>
+              • ملاک امتیازدهی: آخرین مدرک مندرج در حکم کارگزینی قبل از تاریخ مشمولیت.<br/>
+              • ۲۰ امتیاز تربیت‌معلم فقط برای مشمولین قانون متعهدین خدمت است (نه برای ادامه تحصیل پس از استخدام).<br/>
+              • اطلاعات این بخش باید با «اطلاعات شخصی» یکسان باشد؛ در صورت مغایرت، سامانه آن‌ها را یکسان می‌کند.
+            </div>
+              <div class="hint">* سقف کل سندی تخصصی: ۱۷۰</div>
+            </div>
+
+            <div class="panel" style="margin-top:10px;">
+              <div class="scorebox">
+                <h2>۳) پژوهش‌ها و تالیفات (سقف ۳۰)</h2>
+                <div class="pillline">
+                  <span class="badge" id="srRemain">باقی‌مانده تا سقف: 30</span>
+                  <span class="badge ok" id="srSoFar">امتیاز تا اینجا: 0</span>
+                  <span class="badge" id="srDocsBadge">تعداد سندها: 0 / 10</span>
+                  <button class="help-btn" type="button" data-help="help-research" aria-expanded="false">؟ راهنما</button>
+                </div>
+              </div>
+              <div class="small">هر ردیف: تعداد × امتیاز هر مورد. سقف این زیر‌بخش ۳۰ است.</div>
+              <table id="tblSpecialResearch"></table>
+              <div class="small" id="srWarn"></div>
+              <div class="small" id="srDocWarn"></div>
+
+              <div class="help-box mutedBox" id="help-research" style="margin-top:10px">
+                <b>راهنمای تکمیل (پژوهش‌ها و تالیفات):</b><br/>
+                • سقف کل این بخش: ۳۰ امتیاز؛ حداکثر مجموع اسناد: ۱۰ مورد (هر بند حداکثر ۴ مورد).<br/>
+                • هر سند فقط در یک بخش بارگذاری شود؛ اسناد تکراری رد می‌شوند.<br/>
+                • اقدام‌پژوهی — مرجع: مدرسه/منطقه/استان/ستاد — گواهی دارای امضا، شماره و تاریخ؛ درج عنوان اقدام‌پژوهی، موضوع و تاریخ اجرا الزامی است.<br/>
+                • درس‌پژوهی — مرجع: مدرسه/منطقه/استان/ستاد — گواهی دارای امضا، شماره و تاریخ؛ درج عنوان درس‌پژوهی، موضوع و تاریخ اجرا الزامی است.<br/>
+                • تألیف کتاب در زمینه آموزشی/تربیتی/ورزشی — مرجع: منطقه/استان/ستاد — ذکر عنوان کتاب مرتبط، شابک و تاریخ انتشار در گواهی الزامی است.<br/>
+                • تدوین در زمینه آموزشی/ورزشی/تربیتی — مرجع: منطقه/استان/ستاد — ذکر عنوان تولید و ارتباط با مسائل آموزش‌وپرورش و تاریخ انتشار الزامی است.<br/>
+                • ترجمه کتاب در زمینه آموزشی/تربیتی/ورزشی — مرجع: شهرستان/استان/ستاد — ذکر عنوان کتاب مرتبط، شابک و تاریخ انتشار الزامی است.<br/>
+                • مقاله علمی پژوهشی — مرجع: منطقه/استان/ستاد — ذکر عنوان مقاله، عنوان نشریه، نمایه نشریه و تاریخ چاپ الزامی است.<br/>
+                • مقاله علمی ترویجی — مرجع: منطقه/استان/ستاد — ذکر عنوان مقاله، عنوان نشریه، نمایه نشریه و تاریخ چاپ الزامی است.<br/>
+                • مقاله پذیرفته‌شده در فراخوان‌های علمی معتبر (کنفرانسی) — مرجع: منطقه/استان/ستاد — ذکر عنوان مقاله، عنوان فراخوان، سطح فراخوان و تاریخ برگزاری الزامی است. برای پایان‌نامه: فرم داوری تأییدشده توسط اساتید و صدور گواهی از مراجع ذی‌ربط با ذکر عنوان پایان‌نامه و سال انتشار الزامی است.
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="footerNote">
+          امتیاز کل «تخصصی» = رفتاری (۸۰) + سندی (۱۷۰) = ۲۵۰. حداقل‌ها: مربی ۱۲۶ | استادیار ۱۵۱ | دانشیار ۱۷۶ | استاد ۲۰۱
+        </div>
+      </section>
+
+      <!-- PROFESSIONAL -->
+      <section id="tab-professional" class="tab" style="display:none;">
+        <div class="grid two">
+          <div class="panel">
+            <div class="scorebox">
+              <div>
+                <h2>رفتاری (حداکثر ۱۰۰)</h2>
+                <div class="hint">در ستون «امتیاز مکتسبه» می‌توانید کمتر از حدّاکثر وارد کنید.</div>
+              </div>
+              <div class="pillline">
+                <span class="badge" id="profBehaviorRemainBadge">باقی‌مانده تا سقف: 100</span>
+                <span class="badge ok" id="profBehaviorSoFar">امتیاز شما تا اینجا: 0</span>
+                <span class="pill"><strong id="profBehaviorTotal">0</strong> / 100</span>
+                <button class="help-btn" type="button" data-help="help-prof-behavior" aria-expanded="false">؟ راهنما</button>
+              </div>
+            </div>
+            <table id="tblProfBehavior"></table>
+            <div class="help-box mutedBox" id="help-prof-behavior" style="margin-top:10px">
+              <b>راهنمای تکمیل (رفتاری حرفه‌ای):</b><br/>
+              • این بخش بر کیفیت یاددهی-یادگیری، ارزشیابی، و ابعاد مختلف تربیتی تمرکز دارد.<br/>
+              • هر ردیف سقف امتیاز دارد؛ امتیاز مکتسبه باید واقع‌بینانه و قابل استناد باشد.<br/>
+              • حداقل امتیاز لازم در شایستگی حرفه‌ای: مربی ۱۴۱ | استادیار ۱۶۶ | دانشیار ۱۹۱ | استاد ۲۱۶.<br/>
+              • کنترل نهایی این بخش توسط ارزیاب حرفه‌ای انجام می‌شود.
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="scorebox">
+              <div>
+                <h2>سندی (حداکثر ۱۷۰)</h2>
+                <div class="hint">برای هر زیر‌بخش، «امتیاز تا اینجا» و «باقی‌مانده تا سقف» نمایش داده می‌شود.</div>
+              </div>
+              <div class="pillline">
+                <span class="badge" id="profDocRemainBadge">باقی‌مانده تا سقف: 170</span>
+                <span class="badge ok" id="profDocSoFar">امتیاز شما تا اینجا: 0</span>
+                <span class="pill"><strong id="profDocTotal">0</strong> / 170</span>
+              </div>
+            </div>
+
+            <div class="panel" style="margin-top:10px;">
+              <div class="scorebox">
+                <h2>۱) همکاری در اداره امور (سقف ۵۰)</h2>
+                <div class="pillline">
+                  <span class="badge" id="pcRemain">باقی‌مانده تا سقف: 50</span>
+                  <span class="badge ok" id="pcSoFar">امتیاز تا اینجا: 0</span>
+                  <span class="badge" id="pcDocsBadge">تعداد سندها: 0 / 10</span>
+                  <button class="help-btn" type="button" data-help="help-coop" aria-expanded="false">؟ راهنما</button>
+                </div>
+              </div>
+              <div class="small">هر ردیف: تعداد (۰ تا ۳) × ۵ امتیاز. اگر جمع از ۵۰ بیشتر شود هشدار می‌دهد.</div>
+              <table id="tblProfCoop"></table>
+              <div class="small" id="pcWarn"></div>
+              <div class="small" id="pcDocWarn"></div>
+
+              <div class="help-box mutedBox" id="help-coop" style="margin-top:10px">
+                <b>راهنمای تکمیل (همکاری در اداره امور):</b><br/>
+                • حداکثر مجموع اسناد: ۱۰ مورد؛ هر بند حداکثر ۳ مورد. امتیاز هر بند مستقل محاسبه می‌شود.<br/>
+                • هر سند فقط در یک بخش بارگذاری شود؛ اسناد تکراری رد می‌شوند.<br/>
+                • عضویت در کارگروه‌ها — مرجع: منطقه/استان/ستاد — گواهی یا ابلاغ عضویت با امضا، شماره و تاریخ؛ درج عنوان عضویت الزامی است.<br/>
+                • حضور در شوراها و جلسات آموزشی/پرورشی/ورزشی/اداری — مرجع: مدرسه/منطقه/استان/ستاد — گواهی حضور با امضا، شماره و تاریخ معتبر است.<br/>
+                • حضور فعال در انجمن‌های علمی معلمان — مرجع: استان — گواهی با امضا، شماره و تاریخ از انجمن علمی معلمان استان/اداره کل معتبر است.<br/>
+                • عضویت در بسیج فرهنگیان — مرجع: منطقه/استان/ستاد — گواهی با امضا، شماره و تاریخ معتبر است.<br/>
+                • عضویت در کمیته‌های مصوب — مرجع: منطقه/استان/ستاد — گواهی عضویت با امضا، شماره و تاریخ معتبر است.<br/>
+                • عضویت در گروه آموزشی — مرجع: منطقه/استان/ستاد — گواهی عضویت با امضا، شماره و تاریخ معتبر است.<br/>
+                • عضویت در انجمن اولیا و مربیان — مرجع: مدرسه — گواهی با امضای مدیر مدرسه معتبر است.<br/>
+                • عضویت در شورای مدرسه — مرجع: مدرسه — گواهی با امضای مدیر مدرسه معتبر است.<br/>
+                • مشارکت در فعالیت‌های فوق‌برنامه — مرجع: مدرسه/منطقه/استان/ستاد — گواهی با امضا، شماره و تاریخ معتبر است.<br/>
+                • عضویت در ستاد تربیتی مدرسه — مرجع: مدرسه — گواهی با امضای مدیر مدرسه معتبر است.
+              </div>
+            </div>
+
+            <div class="panel" style="margin-top:10px;">
+              <div class="scorebox">
+                <h2>۲) سابقه تدریس به همکاران (تشویقی) – سقف پویا</h2>
+                <div class="pillline">
+                  <span class="badge" id="teachCapBadge">سقف: 10</span>
+                  <span class="badge ok" id="teachSoFar">امتیاز تا اینجا: 0</span>
+                  <button class="help-btn" type="button" data-help="help-teach" aria-expanded="false">؟ راهنما</button>
+                </div>
+              </div>
+              <div class="hint">حداکثر امتیاز: استادیار ۱۰ | دانشیار ۲۰ | استاد ۳۰ (بر اساس «هدف» در اطلاعات پایه).</div>
+              <div class="row">
+                <label class="pill">ساعت تدریس ضمن‌خدمت (هر ۱۰ ساعت = ۱ امتیاز):
+                  <input class="num wide" id="teachInServiceHours" type="number" min="0" max="20000" value="0"/>
+                </label>
+                <label class="pill">واحد تدریس در دانشگاه‌های وابسته (هر واحد = ۱ امتیاز):
+                  <input class="num" id="teachUniversityUnits" type="number" min="0" max="2000" value="0"/>
+                </label>
+                <label class="pill">تدریس در کارگاه تخصصی/آموزش خانواده (هر مورد = ۲ امتیاز):
+                  <input class="num" id="teachWorkshopsCount" type="number" min="0" max="2000" value="0"/>
+                </label>
+              </div>
+              <div class="small" id="teachWarn"></div>
+
+              <div class="help-box mutedBox" id="help-teach" style="margin-top:10px">
+                <b>راهنمای تکمیل (سابقه تدریس به همکاران):</b><br/>
+                • گواهی تدریس در دوره ضمن‌خدمت — مرجع: امور اداری/سامانه ضمن‌خدمت — ابلاغ یا گواهی با عنوان دوره، تعداد ساعت تدریس و کد دوره لازم است (هر ۱۰ ساعت = ۱ امتیاز).<br/>
+                • گواهی تدریس در دانشگاه‌های وابسته به وزارت — مرجع: دانشگاه‌های فرهنگیان و شهید رجایی — ابلاغ یا گواهی با تعداد واحد تدریس به‌ازای هر درس لازم است (هر واحد = ۱ امتیاز).<br/>
+                • تدریس در کارگاه‌های تخصصی/آموزش خانواده — مرجع: منطقه/استان/ستاد — گواهی با عنوان دوره و ساعت تدریس و امضای مقام‌های مجاز معتبر است (هر مورد = ۲ امتیاز).<br/>
+                • هر دوره به‌صورت مستقل محاسبه می‌شود و سقف نهایی تابع «هدف» در اطلاعات پایه است.
+              </div>
+            </div>
+
+            <div class="panel" style="margin-top:10px;">
+              <div class="scorebox">
+                <h2>۳) یادگیری مستمر (سقف ۶۰)</h2>
+                <div class="pillline">
+                  <span class="badge" id="contRemain">باقی‌مانده تا سقف: 60</span>
+                  <span class="badge ok" id="contSoFar">امتیاز تا اینجا: 0</span>
+                  <span class="badge" id="contDocsBadge">تعداد سندها: 0 / 10</span>
+                  <button class="help-btn" type="button" data-help="help-cont" aria-expanded="false">؟ راهنما</button>
+                </div>
+              </div>
+              <div class="small">سقف کل این بخش ۶۰ است؛ برای «ساعت دوره کوتاه‌مدت» سقف ۴۰ امتیاز اعمال می‌شود.</div>
+              <div class="row" style="margin-top:8px">
+                <label class="pill">ساعت دوره‌های کوتاه‌مدت (هر ۵ ساعت = ۱ امتیاز):
+                  <input class="num wide" id="contShortHours" type="number" min="0" max="50000" value="0"/>
+                </label>
+                <label class="pill">گواهی مهارتی (هر مورد ۵):
+                  <input class="num" id="contSkillCount" type="number" min="0" max="3" data-max="3" value="0"/>
+                </label>
+                <label class="pill">مشارکت داوطلبانه مدرسه (هر مورد ۲):
+                  <input class="num" id="contVolunteerCount" type="number" min="0" max="3" data-max="3" value="0"/>
+                </label>
+                <label class="pill">تعهد به یادگیری (هر مورد ۴):
+                  <input class="num" id="contCommitCount" type="number" min="0" max="3" data-max="3" value="0"/>
+                </label>
+                <label class="pill">کارگاه تخصصی مرتبط (هر مورد ۲):
+                  <input class="num" id="contWorkshopCount" type="number" min="0" max="3" data-max="3" value="0"/>
+                </label>
+              </div>
+              <div class="small" id="contWarn"></div>
+              <div class="small" id="contDocWarn"></div>
+
+              <div class="help-box mutedBox" id="help-cont" style="margin-top:10px">
+                <b>راهنمای تکمیل (یادگیری مستمر):</b><br/>
+                • گذراندن دوره‌های کوتاه‌مدت آموزشی — مرجع: امور اداری/سامانه ضمن‌خدمت — هر ۵ ساعت = ۱ امتیاز، سقف ۴۰ امتیاز.<br/>
+                • گواهی‌های مهارتی خارج از ضمن‌خدمت — مرجع: منطقه/استان/ستاد — گواهی با امضا، شماره و تاریخ معتبر است؛ هر مورد ۵ امتیاز (حداکثر ۲۰ امتیاز).<br/>
+                • مشارکت داوطلبانه مدرسه — مرجع: مدرسه — گواهی با امضای مدیر مدرسه و درج عنوان مشارکت الزامی است (هر مورد ۲ امتیاز).<br/>
+                • تعهد به یادگیری مداوم — مرجع: مدرسه/منطقه/استان/ستاد — گواهی فعالیت‌های دانشی/مهارتی مرتبط با رشته شغلی با امضا، شماره و تاریخ معتبر است (هر مورد ۴ امتیاز).<br/>
+                • کارگاه‌های تخصصی مرتبط — مرجع: مدرسه/منطقه/استان/ستاد — گواهی شرکت با امضا، شماره و تاریخ معتبر است (هر مورد ۲ امتیاز).<br/>
+                • حداکثر مجموع اسناد این بخش: ۱۰ مورد؛ هر ردیف حداکثر ۳ مورد.<br/>
+                • هر سند فقط در یک بخش بارگذاری شود؛ اسناد تکراری رد می‌شوند.
+              </div>
+            </div>
+
+            <div class="panel" style="margin-top:10px;">
+              <div class="scorebox">
+                <h2>۴) موفقیت‌ها و تقدیرنامه‌ها (سقف ۶۰)</h2>
+                <div class="pillline">
+                  <span class="badge" id="achRemain">باقی‌مانده تا سقف: 60</span>
+                  <span class="badge ok" id="achSoFar">امتیاز تا اینجا: 0</span>
+                </div>
+              </div>
+              <div class="small">درون این بخش، مسابقات/جشنواره‌ها سقف ۴۰ و تقدیرنامه‌ها سقف ۲۰ اعمال می‌شود.</div>
+
+              <div class="panel" style="margin-top:8px;border-style:dashed;">
+                <div class="scorebox">
+                  <h2 style="font-size:14px;margin:0 0 8px 0;">۴-۱) مقام‌ها (سقف ۴۰)</h2>
+                <div class="pillline">
+                  <span class="badge" id="awRemain">باقی‌مانده تا سقف: 40</span>
+                  <span class="badge ok" id="awSoFar">امتیاز تا اینجا: 0</span>
+                  <span class="badge" id="awDocsBadge">تعداد سندها: 0 / 10</span>
+                  <button class="help-btn" type="button" data-help="help-awards" aria-expanded="false">؟ راهنما</button>
+                </div>
+              </div>
+              <table id="tblAwards"></table>
+              <div class="small" id="awWarn"></div>
+              <div class="small" id="awDocWarn"></div>
+
+              <div class="help-box mutedBox" id="help-awards" style="margin-top:10px">
+                <b>راهنمای تکمیل (کسب مقام در مسابقات و جشنواره‌ها):</b><br/>
+                • حداکثر مجموع اسناد: ۱۰ مورد؛ امتیاز هر بند مستقل محاسبه می‌شود؛ سقف این بخش ۴۰ امتیاز است.<br/>
+                • گواهی کسب مقام باید دارای امضا، شماره و تاریخ باشد و توسط مرجع ذی‌ربط منطقه/استان/ستاد صادر شده باشد.<br/>
+                • گواهی‌های خارج از وزارت آموزش‌وپرورش در صورت تأیید حوزه مرتبط در اداره محل خدمت معتبر است.<br/>
+                • درج عناوین «برتر/عالی/ممتاز» در گواهی، معادل رتبه اول محسوب می‌شود.
+              </div>
+            </div>
+
+              <div class="panel" style="margin-top:8px;border-style:dashed;">
+                <div class="scorebox">
+                  <h2 style="font-size:14px;margin:0 0 8px 0;">۴-۲) معلم نمونه (یکی را انتخاب کنید)</h2>
+                  <div class="pillline">
+                    <span class="badge ok" id="exSoFar">امتیاز تا اینجا: 0</span>
+                  </div>
+                </div>
+                <div class="row">
+                  <label class="pill"><input type="radio" name="exTeacher" value="0" checked /> ندارد (۰)</label>
+                  <label class="pill"><input type="radio" name="exTeacher" value="5" /> مدرسه (۵)</label>
+                  <label class="pill"><input type="radio" name="exTeacher" value="10" /> منطقه (۱۰)</label>
+                  <label class="pill"><input type="radio" name="exTeacher" value="20" /> استان (۲۰)</label>
+                  <label class="pill"><input type="radio" name="exTeacher" value="30" /> کشور (۳۰)</label>
+                </div>
+              </div>
+
+              <div class="panel" style="margin-top:8px;border-style:dashed;">
+                <div class="scorebox">
+                  <h2 style="font-size:14px;margin:0 0 8px 0;">۴-۳) تقدیرنامه‌ها (سقف ۲۰)</h2>
+                  <div class="pillline">
+                    <span class="badge" id="comRemain">باقی‌مانده تا سقف: 20</span>
+                    <span class="badge ok" id="comSoFar">امتیاز تا اینجا: 0</span>
+                    <span class="badge" id="comDocsBadge">تعداد سندها: 0 / 20</span>
+                    <button class="help-btn" type="button" data-help="help-commend" aria-expanded="false">؟ راهنما</button>
+                  </div>
+                </div>
+                <table id="tblCommend"></table>
+                <div class="small" id="comWarn"></div>
+                <div class="small" id="comDocWarn"></div>
+
+                <div class="help-box mutedBox" id="help-commend" style="margin-top:10px">
+                  <b>راهنمای تکمیل (تقدیرنامه‌ها):</b><br/>
+                  • حداکثر مجموع اسناد: ۲۰ مورد؛ سقف امتیاز این بخش ۲۰ است.<br/>
+                  • تقدیرنامه باید مطابق جدول تشویق‌ها و مرتبط با وظایف شغلی باشد.<br/>
+                  • تقدیرنامه باید دارای شماره، تاریخ و موضوع بوده و از سطح مدرسه و بالاتر صادر شود.<br/>
+                  • برای «مدیر واحد آموزشی»، هر سال حداکثر سه مورد محاسبه می‌شود.
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+
+        <div class="footerNote">
+          امتیاز کل «حرفه‌ای» = رفتاری (۱۰۰) + سندی (۱۷۰) = ۲۷۰. حداقل‌ها: مربی ۱۴۱ | استادیار ۱۶۶ | دانشیار ۱۹۱ | استاد ۲۱۶
+        </div>
+      </section>
+
+      <!-- EXPERIENCE -->
+      <section id="tab-experience" class="tab" style="display:none;">
+        <div class="grid two">
+          <div class="panel">
+            <div class="scorebox">
+              <div>
+                <h2>رفتاری (حداکثر ۱۲۰)</h2>
+                <div class="hint">چهار ردیف ۳۰ امتیازی. در ستون امتیاز مکتسبه می‌توانید کمتر وارد کنید.</div>
+              </div>
+              <div class="pillline">
+                <span class="badge" id="expBehaviorRemainBadge">باقی‌مانده تا سقف: 120</span>
+                <span class="badge ok" id="expBehaviorSoFar">امتیاز شما تا اینجا: 0</span>
+                <span class="pill"><strong id="expBehaviorTotal">0</strong> / 120</span>
+                <button class="help-btn" type="button" data-help="help-exp-behavior" aria-expanded="false">؟ راهنما</button>
+              </div>
+            </div>
+            <table id="tblExpBehavior"></table>
+            <div class="help-box mutedBox" id="help-exp-behavior" style="margin-top:10px">
+              <b>راهنمای تکمیل (رفتاری تجربه):</b><br/>
+              • چهار ردیف ۳۰ امتیازی: حل مسئله، تصمیم‌گیری و انتخاب، ایده‌پردازی و طراحی، و خلاقیت.<br/>
+              • امتیاز باید با شواهد معتبر عملکردی قابل تایید باشد.
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="scorebox">
+              <div>
+                <h2>سندی (حداکثر ۱۶۰)</h2>
+              <div class="hint">سنوات مؤثر (با لحاظ تعجیل، سقف ۱۳۰) + میانگین ارزشیابی ۵ سال (سقف ۳۰)</div>
+              </div>
+              <div class="pillline">
+                <span class="badge" id="expDocRemainBadge">باقی‌مانده تا سقف: 160</span>
+                <span class="pill"><strong id="expDocTotal">0</strong> / 160</span>
+                <button class="help-btn" type="button" data-help="help-exp-doc" aria-expanded="false">؟ راهنما</button>
+              </div>
+            </div>
+            <div class="help-box mutedBox" id="help-exp-doc" style="margin-top:10px">
+              <b>راهنمای تکمیل (سندی تجربه):</b><br/>
+              • امتیاز این بخش از دو جزء تشکیل می‌شود: «سنوات مؤثر» (سقف ۱۳۰) و «میانگین ارزشیابی ۵ سال» (سقف ۳۰).<br/>
+              • سنوات مؤثر = سنوات خدمت + تعجیل. تعجیل برای دوره ابتدایی، مدارس استثنایی و مناطق محروم/مرزی/عشایری اعمال می‌شود (هر سال ۳ ماه کاهش).<br/>
+              • مدت تعجیل از حداقل سنوات لازم برای ارتقاء کسر می‌شود و در امتیاز سنوات اثر دارد.<br/>
+              • مدارک و سوابق باید در بازه «رتبه فعلی تا تاریخ استحقاق رتبه جدید» باشند.<br/>
+              • سنوات حق‌التدریس/نهضت/خرید خدمات فقط در صورتی قابل احتساب است که در حکم کارگزینی اعمال شده باشد.<br/>
+              • خدمت نظام‌وظیفه/سربازمعلم با شرط پرداخت بیمه و بدون دوره آموزشی قابل احتساب است.<br/>
+              • اشتغال در سایر دستگاه‌ها و مشاغل غیرمرتبط قابل احتساب نیست.<br/>
+              • ایام تحصیل دانشجویان متعهد خدمت به‌عنوان سنوات تجربی قابل احتساب نیست.<br/>
+              • سنوات نیمه‌وقت بانوان (طبق قانون مربوط) حداکثر تا ۳ سال تمام‌وقت محسوب می‌شود.
+            </div>
+
+            <div class="panel" style="margin-top:10px;">
+              <div class="scorebox">
+                <h2>۱) سنوات خدمت (سقف ۱۳۰)</h2>
+                <div class="pillline">
+                  <span class="badge" id="yrsRemain">باقی‌مانده تا سقف: 130</span>
+                  <span class="badge ok">امتیاز تا اینجا: <span id="yearsScore">0</span></span>
+                </div>
+              </div>
+              <div class="hint">
+                ۱–۵ سال: هر سال ۲ | ۶–۱۰: هر سال ۳ | ۱۱–۱۵: هر سال ۴ | ۱۶–۲۰: هر سال ۵ | ۲۱+: هر سال ۶
+              </div>
+              <div class="row" style="margin-top:10px">
+                <label class="pill">سنوات خدمت (سال):
+                  <input class="num" id="yearsService2" type="number" min="0" max="60" value="0" />
+                </label>
+                <label class="pill">مدت خدمت مشمول تعجیل (ماه):
+                  <input class="num" id="accelEligibleMonths2" type="number" min="0" max="720" step="1" value="0" />
+                </label>
+              </div>
+              <div class="row" style="margin-top:10px">
+                <span class="pill">تعجیل محاسبه‌شده: <strong id="accelMonths2">0</strong> ماه (<strong id="accelYearsOut2">0</strong> سال)</span>
+                <span class="pill">سنوات مؤثر: <strong id="effectiveYears2">0</strong> سال</span>
+              </div>
+            </div>
+
+            <div class="panel" style="margin-top:10px;">
+              <div class="scorebox">
+                <h2>۲) میانگین ارزشیابی ۵ سال (سقف ۳۰)</h2>
+                <div class="pillline">
+                  <span class="badge" id="evalRemain">باقی‌مانده تا سقف: 30</span>
+                  <span class="badge ok">امتیاز تا اینجا: <span id="evalScore">0</span></span>
+                </div>
+              </div>
+              <div class="hint">فرمول: میانگین × ۳۰ ÷ ۱۰۰</div>
+              <div class="row" style="margin-top:10px">
+                <label class="pill">میانگین (۰ تا ۱۰۰):
+                  <input class="num" id="avgEval2" type="number" min="0" max="100" value="0" />
+                </label>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="footerNote">
+          امتیاز کل «تجربه» = رفتاری (۱۲۰) + سندی (۱۶۰) = ۲۸۰. حداقل‌ها: مربی ۱۳۵ | استادیار ۱۶۵ | دانشیار ۱۹۵ | استاد ۲۲۵
+        </div>
+      </section>
+
+
+      <!-- SOURCES -->
+      <section id="tab-sources" class="tab" style="display:none;">
+        <div class="grid two">
+          <div class="panel">
+            <h2>منابع و نسخه برنامه</h2>
+            <div class="hint">
+              این ابزار برای «پیش‌محاسبه» طراحی شده است و ملاک نهایی، نتیجه ثبت‌شده در سامانه و بررسی مراجع ذی‌صلاح است.
+              منطق امتیازدهی و سقف‌ها بر اساس فایل‌های راهنمای رتبه‌بندی که شما در اختیار برنامه گذاشته‌اید تنظیم می‌شود.
+            </div>
+
+            <div class="panel" style="margin-top:10px;border-style:dashed;">
+              <div class="row">
+                <span class="pill">نسخه قواعد (Rules): <strong id="rulesVersion">—</strong></span>
+                <span class="pill">شناسه یکپارچگی قواعد: <strong id="rulesHash">—</strong></span>
+              </div>
+              <div class="small" style="margin-top:6px">
+                اگر در آینده «شیوه‌نامه/راهنما» به‌روزرسانی شد، باید قواعد این صفحه هم به همان نسبت به‌روزرسانی شود. تغییر در قواعد باعث تغییر «شناسه یکپارچگی» می‌شود.
+              </div>
+            </div>
+
+            <div class="panel" style="margin-top:10px;">
+              <h2>فایل‌های مرجع (آپلود شده)</h2>
+              <div class="hint">این لیست فقط برای شفافیت است و نشان می‌دهد برنامه بر اساس کدام مستندات تنظیم شده است.</div>
+              <ul id="sourceList" style="line-height:1.9;margin:10px 0 0 0;padding:0 18px;"></ul>
+            </div>
+
+            <div class="panel" style="margin-top:10px;">
+              <h2>خروجی قواعد (برای پشتیبان‌گیری)</h2>
+              <div class="hint">برای اینکه در آینده بتوانید دقیقاً همین قواعد را نگه دارید یا به همکاران بدهید، فایل JSON قواعد را دانلود کنید.</div>
+              <div class="btnbar" style="margin-top:10px;">
+                <button class="ghost" id="btnExportRules">دانلود JSON قواعد</button>
+              </div>
+            </div>
+
+            <div class="panel" style="margin-top:10px;">
+              <h2>پشتیبان‌گیری از داده‌های شما</h2>
+              <div class="hint">ذخیره خودکار به‌صورت محلی انجام می‌شود و به اینترنت ارسال نمی‌شود.</div>
+              <div class="row" style="margin-top:10px">
+                <span class="pill">آخرین ذخیره محلی: <strong id="lastSaved">—</strong></span>
+              </div>
+              <div class="btnbar" style="margin-top:10px;">
+                <button class="ghost" id="btnExportData">دانلود داده‌ها (JSON)</button>
+                <button class="ghost" id="btnImportData">بارگذاری داده‌ها</button>
+                <button class="ghost" id="btnClearData">حذف ذخیره محلی</button>
+              </div>
+              <input id="importFile" type="file" accept="application/json" style="display:none" />
+              <div class="small" id="dataMsg"></div>
+            </div>
+          </div>
+
+          <div class="panel">
+            <h2>قفل قواعد و جلوگیری از برداشت سلیقه‌ای</h2>
+            <div class="mutedBox">
+              ✅ هر گزینه دو ستون دارد: «حداکثر امتیاز» و «امتیاز مکتسبه».<br/>
+              ✅ تیک‌زدن فقط «پیشنهادِ حداکثر» است؛ اگر شما واقعاً حداکثر را ندارید، باید امتیاز مکتسبه کمتر وارد کنید.<br/>
+              ✅ سقف‌های هر بخش/زیر‌بخش و سقف هر ردیف کنترل می‌شود و بیشتر از سقف پذیرفته نمی‌شود.<br/>
+              ✅ برای احراز رتبه، حداقلِ امتیاز هر شایستگی + شرط سنوات همزمان بررسی می‌شود.
+            </div>
+
+            <div class="panel" style="margin-top:10px;border-style:dashed;">
+              <h2>یادآوری‌های مهم درباره مستندات</h2>
+              <div class="small">
+                • مدرک باید خوانا باشد و تاریخ/عنوان/شماره و در صورت نیاز امضا/مهر داشته باشد.<br/>
+                • از بارگذاری «سند تکراری» در چند بخش خودداری کنید.<br/>
+                • تاریخ مدارک باید در بازه قابل قبول باشد (از تاریخ رتبه فعلی تا تاریخ استحقاق رتبه جدید و…).<br/>
+                • عدم رؤیت: فایل باز نمی‌شود یا ناخواناست. عدم صحت: تاریخ/موضوع/امضا مغایر است. عدم تناسب: سطح/رتبه سند با عنوان شایستگی نمی‌خواند.
+              </div>
+            </div>
+
+            <div class="panel" style="margin-top:10px;">
+              <h2>قواعد قانونی کلیدی (خلاصه)</h2>
+              <div class="small">
+                • ارتقاء هر رتبه مستلزم حداقل ۵ سال خدمت در رتبه قبلی و کسب حداقل امتیاز هر شایستگی است.<br/>
+                • حداقل سابقه خدمت برای دانشیار ۱۵ سال و برای استاد ۲۱ سال است (با اعمال تعجیل).<br/>
+                • تعجیل برای دوره ابتدایی/استثنایی/مناطق محروم، مرزی و عشایری: هر سال خدمت تمام‌وقت = ۳ ماه کاهش سنوات لازم.<br/>
+                • مأموریت به سایر دستگاه‌ها در مدت مأموریت مشمول رتبه‌بندی نیست.<br/>
+                • مدارک ارتقاء فقط در بازه «رتبه فعلی تا تاریخ استحقاق رتبه جدید» پذیرفته می‌شود.<br/>
+                • افراد بدون رتبه قبلی: مدارک از بدو استخدام تا تاریخ مشمولیت ملاک است؛ نیروهای جدیدالاستخدام: مدارک قبل از تاریخ مشمولیت پذیرفته نیست.<br/>
+                • آخرین مدرک تحصیلی مندرج در حکم کارگزینی قبل از تاریخ مشمولیت ملاک امتیازدهی است.<br/>
+                • ارزشیابی: میانگین حداکثر ۵ سال منتهی به تاریخ مشمولیت؛ در مرخصی بدون حقوق، آخرین ارزشیابی قبل از مرخصی ملاک است.
+              </div>
+            </div>
+
+            <div class="panel" style="margin-top:10px;">
+              <h2>مسیر بررسی پرونده و مراجع ارزیابی</h2>
+              <div class="small">
+                • مدیر مستقیم: کنترل اصالت مستندات و ارزیابی رفتاری اولیه در سامانه.<br/>
+                • کارشناس امور اداری: بررسی سنوات، ارزشیابی، تدریس به همکاران، کسب مقام و مشمولیت قانونی.<br/>
+                • کارشناسان مقاطع: بررسی تولید و ساخت، پژوهش‌ها، همکاری در اداره امور و یادگیری مستمر.<br/>
+                • ارزیاب حرفه‌ای: کنترل نهایی پرونده و ارسال به هیأت ممیزه.
+              </div>
+            </div>
+
+            <div class="panel" style="margin-top:10px;">
+              <h2>اطلاعیه‌ها و بخشنامه‌ها (خلاصه اجرایی)</h2>
+              <div class="hint">خلاصه اطلاعیه‌های دبیرخانه هیات ممیزه مرکزی برای شفافیت روند رتبه‌بندی.</div>
+
+              <details class="notice">
+                <summary>اطلاعیه شماره ۹ رتبه‌بندی — ۱۴۰۴/۱۱/۱۱</summary>
+                <div class="small">
+                  • هیچ محدودیت زمانی برای بارگذاری مدارک و ثبت درخواست وجود ندارد؛ پروفایل در تمام سال فعال است.<br/>
+                  • منابع مالی لازم برای همه احکام ارتقاء تامین شده است.<br/>
+                  • از همکاران خواسته شده هرچه سریع‌تر مدارک را بارگذاری کنند تا صدور احکام و پرداخت‌ها تسریع شود.
+                </div>
+              </details>
+
+              <details class="notice">
+                <summary>اطلاعیه شماره ۸ رتبه‌بندی — ۱۴۰۴/۱۱/۱۰</summary>
+                <div class="small">
+                  امکان رسیدگی به پرونده‌هایی که مراحل درخواست، بارگذاری مدارک، خوداظهاری و ثبت نهایی را تکمیل کرده‌اند، در کارتابل مدیر مستقیم و اداره محل خدمت فراهم شده است.
+                </div>
+              </details>
+
+              <details class="notice">
+                <summary>اطلاعیه شماره ۷ رتبه‌بندی — ۱۴۰۴/۱۱/۰۷</summary>
+                <div class="small">
+                  اگر پیام «رتبه حکم با رتبه هیات ممیزه مغایرت دارد» مشاهده شد، برای اصلاح احکام کارگزینی مطابق رتبه نهایی، به اداره محل خدمت مراجعه شود.
+                </div>
+              </details>
+
+              <details class="notice">
+                <summary>اطلاعیه شماره ۶ رتبه‌بندی — ۱۴۰۴/۱۱/۰۵</summary>
+                <div class="small">
+                  امکان ثبت درخواست نهایی فراهم شده است؛ پس از تایید نهایی، پرونده به کارتابل رسیدگی ارسال می‌شود. مدیران مستقیم و مراجع ارزیابی موظف به بررسی سریع هستند.
+                </div>
+              </details>
+
+              <details class="notice">
+                <summary>اطلاعیه شماره ۵ رتبه‌بندی — ۱۴۰۴/۱۱/۰۵</summary>
+                <div class="small">
+                  ۲۰ امتیاز «سوابق تربیت معلم» فقط به مشمولین قانون متعهدین خدمت تعلق می‌گیرد که دوره را در دانشگاه فرهنگیان یا شهید رجایی (یا رشته‌های دبیری/مراقب سلامت سایر دانشگاه‌های دولتی) گذرانده باشند. ادامه تحصیل پس از استخدام مشمول این امتیاز نیست.
+                </div>
+              </details>
+
+              <details class="notice">
+                <summary>اطلاعیه شماره ۴ رتبه‌بندی — ۱۴۰۴/۱۱/۰۴</summary>
+                <div class="small">
+                  • ثبت درخواست هیچ‌گاه موجب کاهش رتبه فعلی نمی‌شود.<br/>
+                  • پروفایل در تمام سال فعال است و محدودیت زمانی برای ثبت درخواست وجود ندارد.<br/>
+                  • درخواست‌های ناموفق، هر شش ماه یک‌بار قابل رسیدگی مجدد است.
+                </div>
+              </details>
+
+              <details class="notice">
+                <summary>اطلاعیه شماره ۳ رتبه‌بندی — ۱۴۰۴/۱۱/۰۳</summary>
+                <div class="small">
+                  هشدار درباره سودجویان و مدارک خلاف واقع: مطابق ماده ۱۵ آیین‌نامه اجرایی، ارائه مدارک ناصحیح موجب ارجاع به هیات رسیدگی به تخلفات اداری می‌شود.
+                </div>
+              </details>
+
+              <details class="notice">
+                <summary>اطلاعیه شماره ۲ رتبه‌بندی — ۱۴۰۴/۱۱/۰۳</summary>
+                <div class="small">
+                  ثبت درخواست از ۱۴۰۴/۱۱/۰۴ آغاز شد و محدودیت زمانی ندارد، اما توصیه شده برای تسریع در صدور احکام، زودتر اقدام شود. تنها مرجع بارگذاری مدارک پروفایل شخصی در my.medu.ir است.
+                </div>
+              </details>
+
+              <details class="notice">
+                <summary>اطلاعیه شماره ۱ رتبه‌بندی — ۱۴۰۴/۱۱/۰۲</summary>
+                <div class="small">
+                  تأکید بر مطالعه دقیق آیین‌نامه اجرایی، شیوه‌نامه‌ها و راهنماها و بهره‌گیری از همه فرصت‌ها برای اطلاع‌رسانی و آموزش مشمولین.
+                </div>
+              </details>
+
+              <details class="notice">
+                <summary>نکات تکمیلی مهم</summary>
+                <div class="small">
+                  • تا پیش از تایید نهایی، محدودیت زمانی برای بارگذاری مدارک وجود ندارد؛ اما سرعت عمل موجب تسریع در صدور احکام و پرداخت‌ها می‌شود.<br/>
+                  • امتیازات و مدارک دوره استقرار در مرحله ارتقاء قابل استفاده نیستند؛ فقط بازه «رتبه فعلی تا تاریخ استحقاق رتبه جدید» ملاک است.<br/>
+                  • طبق رأی دیوان عدالت اداری (۱۴۰۴)، آموزشیارمعلم برای بدو استخدام تعیین می‌شود و شرط ارتقاء، حداقل ۵ سال خدمت در این رتبه است.
+                </div>
+              </details>
+            </div>
+
+            <div class="panel" style="margin-top:10px;">
+              <h2>درباره برنامه</h2>
+              <div class="small">
+                این نرم‌افزار متعلق به اداره کل آموزش و پرورش استان آذربایجان شرقی است.<br/>
+                طراح: حسین مرسلی، دکتری مدیریت منابع انسانی.<br/>
+                ارتباط در پیام‌رسان‌ها: <b>@tabriz3edu</b> — تلفن: <b>09141006030</b>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SUMMARY -->
+      <section id="tab-summary" class="tab" style="display:none;">
+        <div class="panel">
+          <div class="scorebox">
+            <div>
+              <h2>کارنامه رتبه‌بندی</h2>
+              <div class="hint">گزارش خلاصه از امتیازها و وضعیت احراز رتبه‌ها.</div>
+            </div>
+            <div class="pill">آخرین بروزرسانی: <strong id="lastUpdate">—</strong></div>
+          </div>
+
+          <div class="panel" style="margin-top:10px">
+            <div class="row">
+              <span class="badge" id="bestRankBadge">—</span>
+              <span class="pill">راهنما: برای احراز رتبه، حداقل امتیاز هر شایستگی + شرط سنوات همزمان باید کامل باشد.</span>
+            </div>
+          </div>
+
+          <div class="grid two" style="margin-top:10px">
+            <div class="panel">
+              <h2>مشخصات فردی (اختیاری)</h2>
+              <table>
+                <tr><th>عنوان</th><th>مقدار</th></tr>
+                <tr><td>نام و نام خانوادگی</td><td id="sumFullName">—</td></tr>
+                <tr><td>کد ملی</td><td id="sumNationalId">—</td></tr>
+                <tr><td>شماره پرسنلی</td><td id="sumPersonnelId">—</td></tr>
+                <tr><td>منطقه/ناحیه</td><td id="sumRegion">—</td></tr>
+                <tr><td>مدرسه/واحد</td><td id="sumSchool">—</td></tr>
+                <tr><td>شماره تماس</td><td id="sumPhone">—</td></tr>
+              </table>
+            </div>
+
+            <div class="panel">
+              <h2>امتیازهای شما (هر شایستگی)</h2>
+              <table>
+                <tr><th>شایستگی</th><th>امتیاز شما</th><th>حداکثر</th></tr>
+                <tr><td>عمومی</td><td id="sumGeneral">0</td><td>200</td></tr>
+                <tr><td>تخصصی</td><td id="sumSpecial">0</td><td>250</td></tr>
+                <tr><td>حرفه‌ای</td><td id="sumProfessional">0</td><td>270</td></tr>
+                <tr><td>تجربه</td><td id="sumExperience">0</td><td>280</td></tr>
+              </table>
+
+              <div class="footerNote">
+                شرط سنوات هم بررسی می‌شود: مربی ۵، استادیار ۱۰، دانشیار ۱۵، استاد ۲۱ سال. تعجیل سنوات در محاسبه سنوات مؤثر لحاظ می‌شود.
+              </div>
+            </div>
+          </div>
+
+          <div class="panel" style="margin-top:10px">
+            <h2>رتبه‌های قابل احراز (بر اساس حداقل‌ها)</h2>
+            <table id="tblEligibility"></table>
+          </div>
+
+          <div class="footerNote">
+            چاپ این صفحه به‌عنوان «چک‌لیست» بسیار کاربردی است.
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </div>
+</div>
+
+<script>
+  const clamp = (v, min, max) => Math.min(max, Math.max(min, v));
+  // --- Rules meta (based on uploaded official guides) ---
+  const RULES_META = {
+    rules_version: "1404.10.24",
+    sources: ["راهنمای_جامع_و_کاربردی_رتبه_بندی_معلمان_1404.pdf", "1- راهنمای بارگذاری مدارک 1404.10.24.pdf", "2-راهنمای اموراداری - 1404.10.24.pdf", "3-راهنمای مدیرمستقیم 1404.10.24.pdf", "4- راهنمای ارزیابان حرفه ای - 1404.10.24.pdf", "5-راهنمای کارشناسان - 1404.10.24.pdf", "6-راهنمای حراست-1404.10.24.pdf", "8-راهنمای هیات های ممیزه -1404.10.24.pdf", "98329_5_Iq8y1enaA6Q.pdf", "98329_6_Iq8y1enaA6Q.pdf", "305968_1_..._140410.pdf"],
+    // Note: for maintainability, the scoring tables below are defined in arrays (items) in this file.
+    // If official guides are updated, update both the arrays and this version.
+  };
+
+  const floor = Math.floor;
+  const nowStr = () => new Date().toLocaleString('fa-IR');
+  const STATE_KEY = "teacher-rank-state";
+  const STATE_VERSION = 1;
+  let saveTimer = null;
+  let storageFailed = false;
+  const PROD_DOCS_CAP = 4;
+  const RESEARCH_DOCS_CAP = 10;
+  const COOP_DOCS_CAP = 10;
+  const CONT_DOCS_CAP = 10;
+  const AWARDS_DOCS_CAP = 10;
+  const COMMEND_DOCS_CAP = 20;
+  let lastProdInputId = "";
+  let lastResearchInputId = "";
+  let lastCoopInputId = "";
+  let lastContInputId = "";
+  let lastAwardsInputId = "";
+  let lastCommendInputId = "";
+
+  function fnv1a(str){
+    // 32-bit FNV-1a hash (deterministic)
+    let h = 0x811c9dc5;
+    for(let i=0;i<str.length;i++){
+      h ^= str.charCodeAt(i);
+      // h *= 16777619  (with overflow)
+      h = (h + ((h<<1) + (h<<4) + (h<<7) + (h<<8) + (h<<24))) >>> 0;
+    }
+    return ("00000000" + h.toString(16)).slice(-8);
+  }
+
+  function setText(id, txt){ document.getElementById(id).textContent = txt; }
+  function setTextMaybe(id, txt){ const el = byId(id); if(el) el.textContent = txt; }
+  function setNote(id, msg, level){
+    const el = byId(id);
+    if(!el) return;
+    el.textContent = msg;
+    if(level === "warn") el.className = "small inlineWarn";
+    else if(level === "ok") el.className = "small inlineOk";
+    else el.className = "small";
+  }
+  function valOrDash(v){ return (v && String(v).trim() !== "") ? v : "—"; }
+  function byId(id){ return document.getElementById(id); }
+
+  function round1(v){ return Math.round(v * 10) / 10; }
+
+  function accelInfo(totalYearsInput, eligibleMonthsInput){
+    let total = parseFloat(totalYearsInput || "0");
+    if(isNaN(total)) total = 0;
+    total = clamp(total, 0, 60);
+    let eligibleMonths = parseFloat(eligibleMonthsInput || "0");
+    if(isNaN(eligibleMonths)) eligibleMonths = 0;
+    eligibleMonths = clamp(eligibleMonths, 0, 720);
+    let capped = false;
+    const maxEligibleMonths = total * 12;
+    if(eligibleMonths > maxEligibleMonths){
+      eligibleMonths = maxEligibleMonths;
+      capped = true;
+    }
+    const eligibleYears = eligibleMonths / 12;
+    const accelMonths = eligibleYears * 3;
+    const accelYears = accelMonths / 12;
+    const effectiveYears = total + accelYears;
+    return {total, eligibleYears, eligibleMonths, accelMonths, accelYears, effectiveYears, capped};
+  }
+
+  function enforceAccelMax(){
+    const y1 = byId("yearsService");
+    const y2 = byId("yearsService2");
+    let years = parseFloat((y1 && y1.value) ? y1.value : (y2 ? y2.value : "0"));
+    if(isNaN(years)) years = 0;
+    years = clamp(years, 0, 60);
+    const maxMonths = Math.round(years * 12);
+    const m1 = byId("accelEligibleMonths");
+    const m2 = byId("accelEligibleMonths2");
+    if(m1) m1.max = String(maxMonths);
+    if(m2) m2.max = String(maxMonths);
+    let changed = false;
+    const clampEl = (el) => {
+      if(!el) return;
+      let v = parseFloat(el.value || "0");
+      if(isNaN(v)) v = 0;
+      v = clamp(v, 0, maxMonths);
+      if(v != parseFloat(el.value || "0")){
+        el.value = String(v);
+        changed = true;
+      }
+    };
+    clampEl(m1);
+    clampEl(m2);
+    return {maxMonths, changed};
+  }
+
+  function syncDegreeFields(source){
+    const pLevelEl = byId("personDegreeLevel");
+    const pBonusEl = byId("personDegreeTeacherUniBonus");
+    const sLevelEl = byId("degreeLevel");
+    const sBonusEl = byId("degreeTeacherUniBonus");
+    if(!pLevelEl || !pBonusEl || !sLevelEl || !sBonusEl){
+      return {level: parseInt(sLevelEl ? (sLevelEl.value || "0") : "0", 10), bonus: (sBonusEl && sBonusEl.checked) ? 20 : 0};
+    }
+
+    const pLevel = pLevelEl.value || "0";
+    const pBonus = pBonusEl.checked ? "1" : "0";
+    const sLevel = sLevelEl.value || "0";
+    const sBonus = sBonusEl.checked ? "1" : "0";
+    const same = (pLevel === sLevel && pBonus === sBonus);
+
+    if(!same){
+      if(source === "personal"){
+        sLevelEl.value = pLevel;
+        sBonusEl.checked = pBonusEl.checked;
+      } else if(source === "special"){
+        pLevelEl.value = sLevel;
+        pBonusEl.checked = sBonusEl.checked;
+      } else {
+        if(pLevel !== "0" || pBonus === "1"){
+          sLevelEl.value = pLevel;
+          sBonusEl.checked = pBonusEl.checked;
+        } else {
+          pLevelEl.value = sLevel;
+          pBonusEl.checked = sBonusEl.checked;
+        }
+      }
+      setNote("degreeSyncWarn", "⚠ اطلاعات مدرک یکسان‌سازی شد.", "warn");
+      setNote("degreeSyncWarnBase", "⚠ اطلاعات مدرک یکسان‌سازی شد.", "warn");
+    } else {
+      setNote("degreeSyncWarn", "", "");
+      setNote("degreeSyncWarnBase", "", "");
+    }
+
+    return {level: parseInt(sLevelEl.value || "0", 10), bonus: sBonusEl.checked ? 20 : 0};
+  }
+
+  function getStorage(){
+    if(storageFailed) return null;
+    try { return window.localStorage; }
+    catch (e){ storageFailed = true; return null; }
+  }
+
+  function setDataMessage(msg, level){
+    const el = byId("dataMsg");
+    if(!el) return;
+    if(!msg){ el.textContent = ""; return; }
+    const cls = level === "bad" ? "inlineBad" : (level === "ok" ? "inlineOk" : "inlineWarn");
+    el.innerHTML = `<span class="${cls}">${msg}</span>`;
+  }
+
+  function collectState(){
+    const inputs = {};
+    document.querySelectorAll("input[id], select[id], textarea[id]").forEach(el => {
+      if(el.type === "radio" || el.type === "file") return;
+      inputs[el.id] = (el.type === "checkbox") ? el.checked : el.value;
+    });
+    const radios = {};
+    document.querySelectorAll("input[type='radio'][name]").forEach(el => {
+      if(el.checked) radios[el.name] = el.value;
+    });
+    return {
+      version: STATE_VERSION,
+      savedAt: nowStr(),
+      rulesHash: byId("rulesHash") ? byId("rulesHash").textContent : "",
+      inputs,
+      radios
+    };
+  }
+
+  function applyState(state){
+    if(!state || typeof state !== "object") return false;
+    if(state.inputs && typeof state.inputs === "object"){
+      for(const [id, val] of Object.entries(state.inputs)){
+        const el = byId(id);
+        if(!el) continue;
+        if(el.type === "file") continue;
+        if(el.type === "checkbox") el.checked = !!val;
+        else el.value = val;
+      }
+    }
+    if(state.radios && typeof state.radios === "object"){
+      for(const [name, val] of Object.entries(state.radios)){
+        const radios = document.querySelectorAll(`input[type='radio'][name='${name}']`);
+        radios.forEach(r => { if(r.value == val) r.checked = true; });
+      }
+    }
+    return true;
+  }
+
+  function saveLocalState(){
+    const storage = getStorage();
+    if(!storage) return;
+    try{
+      const state = collectState();
+      storage.setItem(STATE_KEY, JSON.stringify(state));
+      setText("lastSaved", state.savedAt);
+    } catch(e){
+      storageFailed = true;
+      setDataMessage("ذخیره محلی در این مرورگر/اپ در دسترس نیست.", "bad");
+    }
+  }
+
+  function scheduleSave(){
+    if(saveTimer) clearTimeout(saveTimer);
+    saveTimer = setTimeout(saveLocalState, 300);
+  }
+
+  function loadLocalState(){
+    const storage = getStorage();
+    if(!storage) return null;
+    try{
+      const raw = storage.getItem(STATE_KEY);
+      if(!raw) return null;
+      const state = JSON.parse(raw);
+      if(applyState(state)){
+        if(state.savedAt) setText("lastSaved", state.savedAt);
+        const currentHash = byId("rulesHash") ? byId("rulesHash").textContent : "";
+        if(state.rulesHash && currentHash && state.rulesHash !== currentHash){
+          setDataMessage("⚠ این فایل با قواعد فعلی متفاوت است.", "warn");
+        }
+      }
+      return state;
+    } catch(e){
+      setDataMessage("خطا در خواندن ذخیره محلی.", "bad");
+      return null;
+    }
+  }
+
+  function applyPersonalDefaults(){
+    const defaults = {
+      personName: "حسین",
+      personFamily: "مرسلی",
+      personPhone: "09141006030",
+      personRegion: "اداره کل آموزش و پرورش استان آذربایجان شرقی"
+    };
+    let changed = false;
+    for(const [id, val] of Object.entries(defaults)){
+      const el = byId(id);
+      if(!el) continue;
+      if(String(el.value || "").trim() === ""){
+        el.value = val;
+        changed = true;
+      }
+    }
+    return changed;
+  }
+
+  function setRemainBadge(badgeId, remain, cap){
+    const b = byId(badgeId);
+    if(!b) return;
+    const r = Math.max(0, Math.round(remain * 10)/10);
+    b.textContent = `باقی‌مانده تا سقف: ${r}`;
+    if(remain <= 0) b.className = "badge bad";
+    else if(remain <= cap * 0.2) b.className = "badge warn";
+    else b.className = "badge";
+  }
+
+  function setSoFarBadge(badgeId, sofar){
+    const b = byId(badgeId);
+    if(!b) return;
+    b.textContent = `امتیاز تا اینجا: ${Math.round(sofar * 10)/10}`;
+    b.className = "badge ok";
+  }
+
+  function showWarn(id, msg, level){
+    const el = byId(id);
+    if(!el) return;
+    if(!msg){ el.textContent = ""; return; }
+    const cls = (level === "bad") ? "inlineBad" : "inlineWarn";
+    el.innerHTML = `<span class="${cls}">⚠ ${msg}</span>`;
+  }
+
+  function setDocsBadge(id, used, cap){
+    const b = byId(id);
+    if(!b) return;
+    b.textContent = `تعداد سندها: ${used} / ${cap}`;
+    if(used >= cap) b.className = "badge warn";
+    else b.className = "badge";
+  }
+
+  const generalItems = [
+    {id:"g1", label:"ارتباط‌گیری", pts:20},
+    {id:"g2", label:"شیوا صحبت کردن", pts:20},
+    {id:"g3", label:"تحمل آراء و نظرات مخالف", pts:20},
+    {id:"g4", label:"صبر و سعه صدر (الگوی خویشتنداری و صبوری)", pts:20},
+    {id:"g5", label:"نظم و حضور به‌موقع", pts:20},
+    {id:"g6", label:"رعایت پوشش اسلامی متناسب با شأن معلمی", pts:20},
+    {id:"g7", label:"اعتقاد و پایبندی به اصول و فرایض دینی", pts:10},
+    {id:"g8", label:"پایبندی به مواضع انقلابی", pts:10},
+    {id:"g9", label:"اعتقاد به اصالت‌های میهنی", pts:10},
+    {id:"g10", label:"داشتن روحیه جهادی", pts:10},
+    {id:"g11", label:"التزام عملی به قانون", pts:10},
+    {id:"g12", label:"انجام وظیفه بر اساس قوانین و مقررات", pts:10},
+    {id:"g13", label:"رعایت شئون معلمی", pts:10},
+    {id:"g14", label:"حسن شهرت", pts:10},
+  ];
+
+  const specialBehaviorItems = [
+    {id:"s15", label:"منابع به‌روز و جدید در موضوع تدریس", pts:10},
+    {id:"s16", label:"اهداف و محتوای تخصصی موضوع تدریس", pts:10},
+    {id:"s17", label:"روش‌ها و فنون نوین تدریس", pts:10},
+    {id:"s18", label:"نظریه‌های یادگیری", pts:5},
+    {id:"s19", label:"روش‌های ارزشیابی", pts:5},
+    {id:"s20", label:"چالش‌ها و مسائل تربیتی دانش‌آموزان", pts:10},
+    {id:"s21", label:"اصول/ویژگی‌ها/روش‌های تعلیم‌وتربیت اسلامی", pts:10},
+    {id:"s22", label:"ارزش‌ها/چشم‌انداز/ماموریت/اهداف سند تحول بنیادین", pts:10},
+    {id:"s23", label:"آیین‌نامه اجرایی مدارس", pts:10},
+  ];
+
+  const specialProduction = [
+    {id:"sp1", label:"ساخت ابزارها و تجهیزات آموزشی/تربیتی/ورزشی/اداری", ptsPer:15, maxCount:2},
+    {id:"sp2", label:"طراحی/تولید نرم‌افزارهای آموزشی/تربیتی/ورزشی/اداری", ptsPer:15, maxCount:2},
+    {id:"sp3", label:"ساخت وسایل کمک‌آموزشی و کمک‌ توانبخشی", ptsPer:10, maxCount:2},
+    {id:"sp4", label:"آشنایی با ابزار/تجهیزات/تکنیک‌های نوین", ptsPer:5,  maxCount:2},
+    {id:"sp5", label:"تولید محتوا در فضای مجازی / بسته یادگیری / درسنامه", ptsPer:5, maxCount:2},
+  ];
+
+  const specialResearch = [
+    {id:"sr1", label:"تألیف کتاب", ptsPer:5, maxCount:4},
+    {id:"sr2", label:"تدوین", ptsPer:5, maxCount:4},
+    {id:"sr3", label:"ترجمه کتاب", ptsPer:5, maxCount:4},
+    {id:"sr4", label:"مقاله علمی پژوهشی", ptsPer:5, maxCount:4},
+    {id:"sr5", label:"مقاله علمی ترویجی", ptsPer:4, maxCount:4},
+    {id:"sr6", label:"مقاله پذیرفته‌شده در همایش معتبر", ptsPer:3, maxCount:4},
+    {id:"sr7", label:"اقدام‌پژوهی", ptsPer:3, maxCount:4},
+    {id:"sr8", label:"درس‌پژوهی", ptsPer:2, maxCount:4},
+  ];
+
+  const profBehaviorItems = [
+    {id:"p24", label:"فراهم‌سازی فضای مشارکت دانش‌آموزان", pts:15},
+    {id:"p25", label:"ایجاد فرصت‌های متنوع یاددهی-یادگیری", pts:20},
+    {id:"p26", label:"روش‌های ارزشیابی", pts:15},
+    {id:"p27", label:"تعلیم و تربیت اقتصادی و حرفه‌ای", pts:10},
+    {id:"p28", label:"تعلیم و تربیت اجتماعی سیاسی", pts:10},
+    {id:"p29", label:"تعلیم و تربیت علمی فناوری", pts:10},
+    {id:"p30", label:"تعلیم و تربیت زیستی و بدنی", pts:5},
+    {id:"p31", label:"تعلیم و تربیت اعتقادی/عبادی/اخلاقی", pts:10},
+    {id:"p32", label:"تعلیم و تربیت زیبایی‌شناختی و هنری", pts:5},
+  ];
+
+  const profCoop = [
+    {id:"c1", label:"عضویت در کارگروه‌ها (از سطح مدرسه و بالاتر)", ptsPer:5, maxCount:3},
+    {id:"c2", label:"حضور در شوراها و جلسات آموزشی/پرورشی/ورزشی/اداری", ptsPer:5, maxCount:3},
+    {id:"c3", label:"حضور فعال در انجمن‌های علمی معلمان", ptsPer:5, maxCount:3},
+    {id:"c4", label:"عضویت در بسیج فرهنگیان", ptsPer:5, maxCount:3},
+    {id:"c5", label:"عضویت در کمیته‌های مصوب", ptsPer:5, maxCount:3},
+    {id:"c6", label:"عضویت در گروه آموزشی", ptsPer:5, maxCount:3},
+    {id:"c7", label:"عضویت در انجمن اولیا و مربیان", ptsPer:5, maxCount:3},
+    {id:"c8", label:"عضویت در شورای مدرسه", ptsPer:5, maxCount:3},
+    {id:"c9", label:"مشارکت در فعالیت فوق‌برنامه", ptsPer:5, maxCount:3},
+    {id:"c10", label:"عضویت در ستاد تربیتی مدرسه", ptsPer:5, maxCount:3},
+  ];
+
+  const contDocsItems = [
+    {id:"contSkillCount"},
+    {id:"contVolunteerCount"},
+    {id:"contCommitCount"},
+    {id:"contWorkshopCount"},
+  ];
+
+  const awardsRows = [
+    {id:"aw_reg_1", label:"رتبه ۱ منطقه", ptsPer:4, maxCount:AWARDS_DOCS_CAP},
+    {id:"aw_reg_2", label:"رتبه ۲ منطقه", ptsPer:3, maxCount:AWARDS_DOCS_CAP},
+    {id:"aw_reg_3", label:"رتبه ۳ منطقه", ptsPer:2, maxCount:AWARDS_DOCS_CAP},
+    {id:"aw_prov_1", label:"رتبه ۱ استانی", ptsPer:7, maxCount:AWARDS_DOCS_CAP},
+    {id:"aw_prov_2", label:"رتبه ۲ استانی", ptsPer:6, maxCount:AWARDS_DOCS_CAP},
+    {id:"aw_prov_3", label:"رتبه ۳ استانی", ptsPer:5, maxCount:AWARDS_DOCS_CAP},
+    {id:"aw_nat_1", label:"رتبه ۱ کشوری/بین‌المللی", ptsPer:10, maxCount:AWARDS_DOCS_CAP},
+    {id:"aw_nat_2", label:"رتبه ۲ کشوری/بین‌المللی", ptsPer:9, maxCount:AWARDS_DOCS_CAP},
+    {id:"aw_nat_3", label:"رتبه ۳ کشوری/بین‌المللی", ptsPer:8, maxCount:AWARDS_DOCS_CAP},
+  ];
+
+  const commendationRows = [
+    {id:"pres", label:"رئیس‌جمهور", ptsPer:4, maxCount:COMMEND_DOCS_CAP},
+    {id:"minister", label:"وزیر/معاون رئیس‌جمهور", ptsPer:3, maxCount:COMMEND_DOCS_CAP},
+    {id:"gov", label:"استاندار/معاون استاندار/معاون وزیر/رئیس سازمان", ptsPer:2.5, maxCount:COMMEND_DOCS_CAP},
+    {id:"dir", label:"مدیرکل/معاون مدیرکل/رئیس دانشگاه وابسته", ptsPer:2, maxCount:COMMEND_DOCS_CAP},
+    {id:"head", label:"رئیس/مدیر اداره آموزش و پرورش و معاونان", ptsPer:1.5, maxCount:COMMEND_DOCS_CAP},
+    {id:"school", label:"مدیر واحد آموزشی", ptsPer:1, maxCount:3},
+  ];
+
+  const expBehaviorItems = [
+    {id:"e33", label:"پیشنهاد راه‌حل‌ها", pts:30},
+    {id:"e34", label:"مهارت تصمیم‌گیری و انتخاب (حل مسئله)", pts:30},
+    {id:"e35", label:"ایده‌پردازی و طراحی", pts:30},
+    {id:"e36", label:"مهارت تصمیم‌گیری و انتخاب (خلاقیت)", pts:30},
+  ];
+
+  function buildEarnableTable(tableEl, items, prefix){
+    const rows = [];
+    rows.push(`<tr>
+      <th>گزینه</th>
+      <th style="width:120px">حداکثر</th>
+      <th style="width:160px">امتیاز مکتسبه</th>
+      <th style="width:110px">تیک</th>
+    </tr>`);
+    for(const it of items){
+      rows.push(`
+        <tr>
+          <td>${it.label}</td>
+          <td>${it.pts}</td>
+          <td>
+            <input class="num" type="number" min="0" max="${it.pts}" step="0.5"
+              id="${prefix}${it.id}_earned" data-max="${it.pts}" value="0" />
+            <div class="small" id="${prefix}${it.id}_msg"></div>
+          </td>
+          <td>
+            <label class="chk">
+              <input type="checkbox" id="${prefix}${it.id}_chk" data-max="${it.pts}" />
+              <span class="small">انتخاب</span>
+            </label>
+          </td>
+        </tr>
+      `);
+    }
+    tableEl.innerHTML = rows.join("");
+  }
+
+  function buildCountTable(tableEl, items, prefix, headerLabel, countHint){
+    const rows = [];
+    rows.push(`<tr>
+      <th>${headerLabel}</th>
+      <th style="width:120px">امتیاز هر مورد</th>
+      <th style="width:120px">تعداد (${countHint})</th>
+      <th style="width:120px">امتیاز این ردیف</th>
+    </tr>`);
+    for(const it of items){
+      rows.push(`
+        <tr>
+          <td>${it.label}</td>
+          <td>${it.ptsPer}</td>
+          <td>
+            <input class="num" type="number" min="0" max="${it.maxCount}" value="0"
+              id="${prefix}${it.id}" data-ptsper="${it.ptsPer}" data-max="${it.maxCount}"/>
+            <div class="small">سقف تعداد: ${it.maxCount}</div>
+          </td>
+          <td><span id="${prefix}${it.id}_rowpts">0</span></td>
+        </tr>
+      `);
+    }
+    tableEl.innerHTML = rows.join("");
+  }
+
+  function buildAwardsTable(tableEl){
+    const rows = [];
+    rows.push(`<tr><th>نوع موفقیت</th><th style="width:120px">امتیاز هر مورد</th><th style="width:120px">تعداد</th><th style="width:120px">امتیاز این ردیف</th></tr>`);
+    for(const it of awardsRows){
+      rows.push(`
+        <tr>
+          <td>${it.label}</td>
+          <td>${it.ptsPer}</td>
+          <td>
+            <input class="num" type="number" min="0" max="${it.maxCount}" value="0" id="${it.id}" data-ptsper="${it.ptsPer}" data-max="${it.maxCount}" />
+            <div class="small">سقف تعداد: ${it.maxCount}</div>
+          </td>
+          <td><span id="${it.id}_rowpts">0</span></td>
+        </tr>
+      `);
+    }
+    tableEl.innerHTML = rows.join("");
+  }
+
+  function earnedSum(prefix, items){
+    let total = 0;
+    for(const it of items){
+      const inp = byId(prefix + it.id + "_earned");
+      const msg = byId(prefix + it.id + "_msg");
+      const max = it.pts;
+      if(!inp) continue;
+      let v = parseFloat(inp.value || "0");
+      if(isNaN(v)) v = 0;
+      if(v < 0) v = 0;
+      if(v > max){
+        v = max;
+        inp.value = String(max);
+        if(msg) msg.innerHTML = `<span class="inlineWarn">حداکثر این ردیف ${max} است.</span>`;
+      }else{
+        if(msg) msg.textContent = "";
+      }
+      total += v;
+    }
+    return total;
+  }
+
+  function sumCounts(prefix, items){
+    let total = 0;
+    for(const it of items){
+      const el = byId(prefix + it.id);
+      if(!el) continue;
+      const max = parseFloat(el.dataset.max);
+      const ptsPer = parseFloat(el.dataset.ptsper);
+      let v = parseFloat(el.value || "0");
+      if(isNaN(v)) v = 0;
+      v = clamp(v, 0, max);
+      if(v != parseFloat(el.value || "0")) el.value = v;
+      const rowPts = v * ptsPer;
+      const rowEl = byId(prefix + it.id + "_rowpts");
+      if(rowEl) rowEl.textContent = (Math.round(rowPts*10)/10).toString();
+      total += rowPts;
+    }
+    return total;
+  }
+
+  function enforceTotalDocs(prefix, items, cap, lastInputId){
+    let total = 0;
+    const rows = [];
+    for(const it of items){
+      const el = byId(prefix + it.id);
+      if(!el) continue;
+      const max = parseFloat(el.dataset.max);
+      let v = parseFloat(el.value || "0");
+      if(isNaN(v)) v = 0;
+      v = clamp(v, 0, max);
+      if(v != parseFloat(el.value || "0")) el.value = v;
+      rows.push({el, v});
+      total += v;
+    }
+    const rawTotal = total;
+    if(total <= cap) return {total, raw: rawTotal, changed: false};
+    let over = total - cap;
+    const lastEl = lastInputId ? byId(lastInputId) : null;
+    const order = [];
+    if(lastEl){
+      const hit = rows.find(r => r.el === lastEl);
+      if(hit) order.push(hit);
+    }
+    for(let i = rows.length - 1; i >= 0; i--){
+      if(rows[i].el === lastEl) continue;
+      order.push(rows[i]);
+    }
+    for(let i = 0; i < order.length && over > 0; i++){
+      const row = order[i];
+      const reducible = Math.min(row.v, over);
+      if(reducible > 0){
+        row.v -= reducible;
+        row.el.value = row.v;
+        over -= reducible;
+      }
+    }
+    total = rows.reduce((acc, row) => acc + row.v, 0);
+    return {total, raw: rawTotal, changed: true};
+  }
+
+  function sumAwards(){
+    let raw = 0;
+    for(const it of awardsRows){
+      const el = byId(it.id);
+      const max = parseFloat(el.dataset.max);
+      let v = parseFloat(el.value || "0"); if(isNaN(v)) v = 0;
+      v = clamp(v, 0, isNaN(max) ? 2000 : max);
+      const rowPts = v * it.ptsPer;
+      byId(it.id + "_rowpts").textContent = (Math.round(rowPts*10)/10).toString();
+      raw += rowPts;
+    }
+    return raw;
+  }
+
+  function yearsServiceScore(years){
+    const y = clamp(parseFloat(years || "0"), 0, 60);
+    const s1 = Math.min(y, 5);
+    const s2 = Math.min(Math.max(y - 5, 0), 5);
+    const s3 = Math.min(Math.max(y - 10, 0), 5);
+    const s4 = Math.min(Math.max(y - 15, 0), 5);
+    const s5 = Math.max(y - 20, 0);
+    const score = (s1 * 2) + (s2 * 3) + (s3 * 4) + (s4 * 5) + (s5 * 6);
+    return clamp(score, 0, 130);
+  }
+  function evalScore(avg){
+    const a = clamp(parseFloat(avg || "0"), 0, 100);
+    return clamp((a * 30) / 100, 0, 30);
+  }
+
+  function capped(raw, cap){
+    const v = clamp(raw, 0, cap);
+    return {raw, cap, v, over: raw > cap};
+  }
+
+  function specialDocScore(){
+    const prodDocs = enforceTotalDocs("sp_", specialProduction, PROD_DOCS_CAP, lastProdInputId);
+    const prod = capped(sumCounts("sp_", specialProduction), 30);
+    setSoFarBadge("spSoFar", prod.v);
+    setRemainBadge("spRemain", 30 - prod.v, 30);
+    showWarn("spWarn", prod.over ? `جمع امتیاز تولید/ساخت (${Math.round(prod.raw*10)/10}) از سقف 30 بیشتر شد؛ سقف اعمال شد.` : "", prod.over ? "warn" : "");
+    setDocsBadge("spDocsBadge", prodDocs.total, PROD_DOCS_CAP);
+    showWarn("spDocWarn", prodDocs.changed ? `حداکثر مجموع اسناد این بخش ${PROD_DOCS_CAP} مورد است؛ مقدار اضافی حذف شد (جمع قبلی: ${prodDocs.raw}).` : "", "warn");
+
+    const deg = syncDegreeFields(null);
+    const degree = clamp(deg.level + deg.bonus, 0, 130);
+    setSoFarBadge("degSoFar", degree);
+
+    const resDocs = enforceTotalDocs("sr_", specialResearch, RESEARCH_DOCS_CAP, lastResearchInputId);
+    const res = capped(sumCounts("sr_", specialResearch), 30);
+    setSoFarBadge("srSoFar", res.v);
+    setRemainBadge("srRemain", 30 - res.v, 30);
+    showWarn("srWarn", res.over ? `جمع امتیاز پژوهش/تالیف (${Math.round(res.raw*10)/10}) از سقف 30 بیشتر شد؛ سقف اعمال شد.` : "", res.over ? "warn" : "");
+    setDocsBadge("srDocsBadge", resDocs.total, RESEARCH_DOCS_CAP);
+    showWarn("srDocWarn", resDocs.changed ? `حداکثر مجموع اسناد این بخش ${RESEARCH_DOCS_CAP} مورد است؛ مقدار اضافی حذف شد (جمع قبلی: ${resDocs.raw}).` : "", "warn");
+
+    const totalRaw = prod.v + degree + res.v;
+    const total = capped(totalRaw, 170);
+
+    setText("specialDocTotal", Math.round(total.v * 10)/10);
+    setRemainBadge("specialDocRemainBadge", 170 - total.v, 170);
+
+    return total.v;
+  }
+
+  function teachCap(){
+    const target = byId("targetRank").value;
+    if(target === "ostad") return 30;
+    if(target === "daneshyar") return 20;
+    return 10;
+  }
+
+  function profDocScore(){
+    const coopDocs = enforceTotalDocs("pc_", profCoop, COOP_DOCS_CAP, lastCoopInputId);
+    const coop = capped(sumCounts("pc_", profCoop), 50);
+    setSoFarBadge("pcSoFar", coop.v);
+    setRemainBadge("pcRemain", 50 - coop.v, 50);
+    showWarn("pcWarn", coop.over ? `جمع امتیاز همکاری (${Math.round(coop.raw*10)/10}) از سقف 50 بیشتر شد؛ سقف اعمال شد.` : "", coop.over ? "warn" : "");
+    setDocsBadge("pcDocsBadge", coopDocs.total, COOP_DOCS_CAP);
+    showWarn("pcDocWarn", coopDocs.changed ? `حداکثر مجموع اسناد این بخش ${COOP_DOCS_CAP} مورد است؛ مقدار اضافی حذف شد (جمع قبلی: ${coopDocs.raw}).` : "", "warn");
+
+    const capT = teachCap();
+    setText("teachCapBadge", "سقف: " + capT);
+
+    const inService = floor(clamp(parseFloat(byId("teachInServiceHours").value||"0"),0,999999)/10);
+    const uniUnits = clamp(parseFloat(byId("teachUniversityUnits").value||"0"),0,999999);
+    const workshops = clamp(parseFloat(byId("teachWorkshopsCount").value||"0"),0,999999)*2;
+    const teachRaw = inService + uniUnits + workshops;
+    const teach = capped(teachRaw, capT);
+    setSoFarBadge("teachSoFar", teach.v);
+    showWarn("teachWarn", teach.over ? `امتیاز تدریس به همکاران (${Math.round(teach.raw*10)/10}) از سقف ${capT} بیشتر شد؛ سقف اعمال شد.` : "", teach.over ? "warn" : "");
+
+    const contDocs = enforceTotalDocs("", contDocsItems, CONT_DOCS_CAP, lastContInputId);
+    setDocsBadge("contDocsBadge", contDocs.total, CONT_DOCS_CAP);
+    showWarn("contDocWarn", contDocs.changed ? `حداکثر مجموع اسناد این بخش ${CONT_DOCS_CAP} مورد است؛ مقدار اضافی حذف شد (جمع قبلی: ${contDocs.raw}).` : "", "warn");
+
+    const shortHours = clamp(parseFloat(byId("contShortHours").value||"0"),0,999999);
+    const shortPts = clamp(floor(shortHours/5), 0, 40);
+    const skillPts = clamp(clamp(parseFloat(byId("contSkillCount").value||"0"),0,999999)*5, 0, 20);
+    const volPts   = clamp(clamp(parseFloat(byId("contVolunteerCount").value||"0"),0,999999)*2, 0, 999999);
+    const comPts   = clamp(clamp(parseFloat(byId("contCommitCount").value||"0"),0,999999)*4, 0, 999999);
+    const wkPts    = clamp(clamp(parseFloat(byId("contWorkshopCount").value||"0"),0,999999)*2, 0, 999999);
+    const contRaw = shortPts + skillPts + volPts + comPts + wkPts;
+    const cont = capped(contRaw, 60);
+    setSoFarBadge("contSoFar", cont.v);
+    setRemainBadge("contRemain", 60 - cont.v, 60);
+    showWarn("contWarn", cont.over ? `جمع امتیاز یادگیری مستمر (${Math.round(cont.raw*10)/10}) از سقف 60 بیشتر شد؛ سقف اعمال شد.` : "", cont.over ? "warn" : "");
+
+    const awardsDocs = enforceTotalDocs("", awardsRows, AWARDS_DOCS_CAP, lastAwardsInputId);
+    setDocsBadge("awDocsBadge", awardsDocs.total, AWARDS_DOCS_CAP);
+    showWarn("awDocWarn", awardsDocs.changed ? `حداکثر مجموع اسناد این بخش ${AWARDS_DOCS_CAP} مورد است؛ مقدار اضافی حذف شد (جمع قبلی: ${awardsDocs.raw}).` : "", "warn");
+
+    const awardsRaw = sumAwards();
+    const awards = capped(awardsRaw, 40);
+    setSoFarBadge("awSoFar", awards.v);
+    setRemainBadge("awRemain", 40 - awards.v, 40);
+    showWarn("awWarn", awards.over ? `امتیاز مقام‌ها (${Math.round(awards.raw*10)/10}) از سقف 40 بیشتر شد؛ سقف اعمال شد.` : "", awards.over ? "warn" : "");
+
+    const exTeacherVal = parseFloat((document.querySelector('input[name="exTeacher"]:checked')||{value:"0"}).value);
+    setSoFarBadge("exSoFar", exTeacherVal);
+
+    const comDocs = enforceTotalDocs("cm_", commendationRows, COMMEND_DOCS_CAP, lastCommendInputId);
+    setDocsBadge("comDocsBadge", comDocs.total, COMMEND_DOCS_CAP);
+    showWarn("comDocWarn", comDocs.changed ? `حداکثر مجموع اسناد این بخش ${COMMEND_DOCS_CAP} مورد است؛ مقدار اضافی حذف شد (جمع قبلی: ${comDocs.raw}).` : "", "warn");
+
+    const comRaw = sumCounts("cm_", commendationRows);
+    const com = capped(comRaw, 20);
+    setSoFarBadge("comSoFar", com.v);
+    setRemainBadge("comRemain", 20 - com.v, 20);
+    showWarn("comWarn", com.over ? `امتیاز تقدیرنامه‌ها (${Math.round(com.raw*10)/10}) از سقف 20 بیشتر شد؛ سقف اعمال شد.` : "", com.over ? "warn" : "");
+
+    const achieveRaw = awards.v + exTeacherVal + com.v;
+    const achieve = capped(achieveRaw, 60);
+    setSoFarBadge("achSoFar", achieve.v);
+    setRemainBadge("achRemain", 60 - achieve.v, 60);
+
+    const totalRaw = coop.v + teach.v + cont.v + achieve.v;
+    const total = capped(totalRaw, 170);
+
+    setText("profDocTotal", Math.round(total.v*10)/10);
+    setRemainBadge("profDocRemainBadge", 170 - total.v, 170);
+
+    return total.v;
+  }
+
+  function totalScores(){
+    const g = capped(earnedSum("g_", generalItems), 200);
+    setText("generalTotal", Math.round(g.v*10)/10);
+    setText("generalSoFar", "امتیاز شما تا اینجا: " + (Math.round(g.v*10)/10));
+    setRemainBadge("generalRemainBadge", 200 - g.v, 200);
+
+    const sb = capped(earnedSum("sb_", specialBehaviorItems), 80);
+    setText("specialBehaviorTotal", Math.round(sb.v*10)/10);
+    setText("specialBehaviorSoFar", "امتیاز شما تا اینجا: " + (Math.round(sb.v*10)/10));
+    setRemainBadge("specialBehaviorRemainBadge", 80 - sb.v, 80);
+
+    const sd = specialDocScore();
+    const s = capped(sb.v + sd, 250);
+
+    const pb = capped(earnedSum("pb_", profBehaviorItems), 100);
+    setText("profBehaviorTotal", Math.round(pb.v*10)/10);
+    setText("profBehaviorSoFar", "امتیاز شما تا اینجا: " + (Math.round(pb.v*10)/10));
+    setRemainBadge("profBehaviorRemainBadge", 100 - pb.v, 100);
+
+    const pd = profDocScore();
+    const p = capped(pb.v + pd, 270);
+
+    const eb = capped(earnedSum("eb_", expBehaviorItems), 120);
+    setText("expBehaviorTotal", Math.round(eb.v*10)/10);
+    setText("expBehaviorSoFar", "امتیاز شما تا اینجا: " + (Math.round(eb.v*10)/10));
+    setRemainBadge("expBehaviorRemainBadge", 120 - eb.v, 120);
+
+    const accelClamp = enforceAccelMax();
+    const years = byId("yearsService2").value;
+    const accelInput = byId("accelEligibleMonths2") ? byId("accelEligibleMonths2").value : "0";
+    const accel = accelInfo(years, accelInput);
+    if(accel.capped){
+      if(byId("accelEligibleMonths")) byId("accelEligibleMonths").value = round1(accel.eligibleMonths);
+      if(byId("accelEligibleMonths2")) byId("accelEligibleMonths2").value = round1(accel.eligibleMonths);
+    }
+    setTextMaybe("accelMonths", round1(accel.accelMonths));
+    setTextMaybe("accelYearsOut", round1(accel.accelYears));
+    setTextMaybe("effectiveYears", round1(accel.effectiveYears));
+    setTextMaybe("accelMonths2", round1(accel.accelMonths));
+    setTextMaybe("accelYearsOut2", round1(accel.accelYears));
+    setTextMaybe("effectiveYears2", round1(accel.effectiveYears));
+    showWarn("accelWarn", (accel.capped || accelClamp.changed) ? "مدت مشمول تعجیل نمی‌تواند بیشتر از سنوات خدمت باشد؛ مقدار اصلاح شد." : "", "warn");
+
+    const avg = byId("avgEval2").value;
+    const yPts = yearsServiceScore(accel.effectiveYears);
+    const ePts = evalScore(avg);
+    setText("yearsScore", yPts);
+    setText("evalScore", Math.round(ePts*10)/10);
+
+    setRemainBadge("yrsRemain", 130 - yPts, 130);
+    setRemainBadge("evalRemain", 30 - ePts, 30);
+
+    const expDoc = capped(yPts + ePts, 160);
+    setText("expDocTotal", Math.round(expDoc.v*10)/10);
+    setRemainBadge("expDocRemainBadge", 160 - expDoc.v, 160);
+
+    const e = capped(eb.v + expDoc.v, 280);
+
+    setText("sumGeneral", Math.round(g.v*10)/10);
+    setText("sumSpecial", Math.round(s.v*10)/10);
+    setText("sumProfessional", Math.round(p.v*10)/10);
+    setText("sumExperience", Math.round(e.v*10)/10);
+
+    return {general:g.v, special:s.v, professional:p.v, experience:e.v};
+  }
+
+  function eligibility(scores){
+    const yearsRaw = clamp(parseFloat(byId("yearsService").value || "0"), 0, 60);
+    const accelInput = byId("accelEligibleMonths") ? byId("accelEligibleMonths").value : "0";
+    const accel = accelInfo(yearsRaw, accelInput);
+    const yearsEff = accel.effectiveYears;
+    const ranks = [
+      {name:"مربی‌معلم", minYears:5, mins:{general:100, special:126, professional:141, experience:135}},
+      {name:"استادیارمعلم", minYears:10, mins:{general:120, special:151, professional:166, experience:165}},
+      {name:"دانشیارمعلم", minYears:15, mins:{general:140, special:176, professional:191, experience:195}},
+      {name:"استادمعلم", minYears:21, mins:{general:160, special:201, professional:216, experience:225}},
+    ];
+    const rows = [];
+    rows.push(`<tr>
+      <th>رتبه</th><th>سنوات</th><th>عمومی</th><th>تخصصی</th><th>حرفه‌ای</th><th>تجربه</th><th>وضعیت</th>
+    </tr>`);
+    let best = null;
+
+    for(const r of ranks){
+      const okYears = yearsEff >= r.minYears;
+      const okG = scores.general >= r.mins.general;
+      const okS = scores.special >= r.mins.special;
+      const okP = scores.professional >= r.mins.professional;
+      const okE = scores.experience >= r.mins.experience;
+      const okAll = okYears && okG && okS && okP && okE;
+
+      if(okAll) best = r;
+
+      const cell = (ok, need, got) => `<div style="font-weight:900;color:${ok?'#16a34a':'#dc2626'}">${Math.round(got*10)/10} / ${need}</div>`;
+      const status = okAll ? `<span class="badge ok">قابل احراز</span>` :
+                     (!okYears ? `<span class="badge bad">کمبود سنوات</span>` : `<span class="badge warn">نیاز به تکمیل</span>`);
+
+      const yearsLine = okYears
+        ? `<div style="font-weight:900;color:#16a34a">${round1(yearsEff)} ≥ ${r.minYears}</div>`
+        : `<div style="font-weight:900;color:#dc2626">${round1(yearsEff)} < ${r.minYears}</div>`;
+      const yearsDetail = `<div class="small">واقعی ${round1(yearsRaw)} + تعجیل ${round1(accel.accelYears)}</div>`;
+
+      rows.push(`<tr>
+        <td><b>${r.name}</b></td>
+        <td>${yearsLine}${yearsDetail}</td>
+        <td>${cell(okG, r.mins.general, scores.general)}</td>
+        <td>${cell(okS, r.mins.special, scores.special)}</td>
+        <td>${cell(okP, r.mins.professional, scores.professional)}</td>
+        <td>${cell(okE, r.mins.experience, scores.experience)}</td>
+        <td>${status}</td>
+      </tr>`);
+    }
+    return {html: rows.join(""), best};
+  }
+
+  function syncExperienceInputs(){
+    const y1 = byId("yearsService");
+    const y2 = byId("yearsService2");
+    if(document.activeElement !== y2) y2.value = y1.value;
+
+    const a1 = byId("avgEval");
+    const a2 = byId("avgEval2");
+    if(document.activeElement !== a2) a2.value = a1.value;
+
+    const ac1 = byId("accelEligibleMonths");
+    const ac2 = byId("accelEligibleMonths2");
+    if(ac1 && ac2){
+      if(document.activeElement !== ac2) ac2.value = ac1.value;
+      if(document.activeElement !== ac1) ac1.value = ac2.value;
+    }
+  }
+
+  function render(){
+    syncExperienceInputs();
+    syncDegreeFields(null);
+    const nameEl = byId("personName");
+    const familyEl = byId("personFamily");
+    const fullName = [nameEl ? nameEl.value : "", familyEl ? familyEl.value : ""].filter(v => v && v.trim() !== "").join(" ");
+    const nationalEl = byId("personNationalId");
+    const personnelEl = byId("personPersonnelId");
+    const regionEl = byId("personRegion");
+    const schoolEl = byId("personSchool");
+    const phoneEl = byId("personPhone");
+    setTextMaybe("sumFullName", valOrDash(fullName));
+    setTextMaybe("sumNationalId", valOrDash(nationalEl ? nationalEl.value : ""));
+    setTextMaybe("sumPersonnelId", valOrDash(personnelEl ? personnelEl.value : ""));
+    setTextMaybe("sumRegion", valOrDash(regionEl ? regionEl.value : ""));
+    setTextMaybe("sumSchool", valOrDash(schoolEl ? schoolEl.value : ""));
+    setTextMaybe("sumPhone", valOrDash(phoneEl ? phoneEl.value : ""));
+    const scores = totalScores();
+    const elig = eligibility(scores);
+    byId("tblEligibility").innerHTML = elig.html;
+
+    const badge = byId("bestRankBadge");
+    if(elig.best){
+      badge.textContent = "بالاترین رتبه قابل احراز (برآورد): " + elig.best.name;
+      badge.className = "badge ok";
+    } else {
+      badge.textContent = "با این ورودی‌ها، هنوز حداقل‌ها کامل نیست. جدول را ببینید.";
+      badge.className = "badge warn";
+    }
+    setText("lastUpdate", nowStr());
+  }
+
+  function wireEarnable(items, prefix){
+    for(const it of items){
+      const chk = byId(prefix + it.id + "_chk");
+      const inp = byId(prefix + it.id + "_earned");
+      if(!chk || !inp) continue;
+
+      chk.addEventListener("change", ()=>{
+        const max = parseFloat(chk.dataset.max);
+        const cur = parseFloat(inp.value || "0");
+        if(chk.checked){
+          if(isNaN(cur) || cur === 0) inp.value = String(max);
+          if(!isNaN(cur) && cur > max) inp.value = String(max);
+        } else {
+          if(!isNaN(cur) && cur === max) inp.value = "0";
+        }
+        render();
+      });
+
+      inp.addEventListener("input", ()=>{
+        const v = parseFloat(inp.value || "0");
+        if(!isNaN(v) && v > 0) chk.checked = true;
+        if(!isNaN(v) && v === 0) chk.checked = false;
+        render();
+      });
+    }
+  }
+
+  function init(){
+    buildEarnableTable(byId("tblGeneral"), generalItems, "g_");
+    buildEarnableTable(byId("tblSpecialBehavior"), specialBehaviorItems, "sb_");
+    buildCountTable(byId("tblSpecialProduction"), specialProduction, "sp_", "عنوان", "۰ تا ۲");
+    buildCountTable(byId("tblSpecialResearch"), specialResearch, "sr_", "عنوان", "۰ تا ۴");
+    buildEarnableTable(byId("tblProfBehavior"), profBehaviorItems, "pb_");
+    buildCountTable(byId("tblProfCoop"), profCoop, "pc_", "عنوان", "۰ تا ۳");
+    buildAwardsTable(byId("tblAwards"));
+    buildCountTable(byId("tblCommend"), commendationRows, "cm_", "نوع تقدیرنامه", "۰ تا ۲۰");
+    buildEarnableTable(byId("tblExpBehavior"), expBehaviorItems, "eb_");
+
+    wireEarnable(generalItems, "g_");
+    wireEarnable(specialBehaviorItems, "sb_");
+    wireEarnable(profBehaviorItems, "pb_");
+    wireEarnable(expBehaviorItems, "eb_");
+
+    document.querySelectorAll(".tabbtn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".tabbtn").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        const tabId = btn.dataset.tab;
+        document.querySelectorAll(".tab").forEach(s => s.style.display = "none");
+        byId(tabId).style.display = "block";
+        render();
+        window.scrollTo({top:0, behavior:"smooth"});
+      });
+    });
+
+    document.addEventListener("input", (e) => {
+      const t = e.target;
+      if(t.matches("input[type='number']") && t.value === "") t.value = "0";
+      if(t.id && t.id.startsWith("sp_")) lastProdInputId = t.id;
+      if(t.id && t.id.startsWith("sr_")) lastResearchInputId = t.id;
+      if(t.id && t.id.startsWith("pc_")) lastCoopInputId = t.id;
+      if(t.id && t.id.startsWith("aw_")) lastAwardsInputId = t.id;
+      if(t.id && t.id.startsWith("cm_")) lastCommendInputId = t.id;
+      if(t.id && (t.id === "contSkillCount" || t.id === "contVolunteerCount" || t.id === "contCommitCount" || t.id === "contWorkshopCount")) {
+        lastContInputId = t.id;
+      }
+      if(t.id === "yearsService") byId("yearsService2").value = t.value;
+      if(t.id === "yearsService2") byId("yearsService").value = t.value;
+      if(t.id === "avgEval") byId("avgEval2").value = t.value;
+      if(t.id === "avgEval2") byId("avgEval").value = t.value;
+      if(t.id === "accelEligibleMonths") byId("accelEligibleMonths2").value = t.value;
+      if(t.id === "accelEligibleMonths2") byId("accelEligibleMonths").value = t.value;
+      if(t.id === "personDegreeLevel" || t.id === "personDegreeTeacherUniBonus") syncDegreeFields("personal");
+      if(t.id === "degreeLevel" || t.id === "degreeTeacherUniBonus") syncDegreeFields("special");
+      render();
+      scheduleSave();
+    });
+    document.addEventListener("change", (e) => {
+      const t = e.target;
+      if(t && (t.id === "personDegreeLevel" || t.id === "personDegreeTeacherUniBonus")) syncDegreeFields("personal");
+      if(t && (t.id === "degreeLevel" || t.id === "degreeTeacherUniBonus")) syncDegreeFields("special");
+      render();
+      scheduleSave();
+    });
+    document.addEventListener("click", (e) => {
+      const btn = e.target.closest(".help-btn");
+      if(!btn) return;
+      const targetId = btn.dataset.help;
+      const box = targetId ? byId(targetId) : null;
+      if(!box) return;
+      const open = box.classList.toggle("open");
+      btn.setAttribute("aria-expanded", open ? "true" : "false");
+    });
+
+    byId("btnReset").addEventListener("click", () => {
+      document.querySelectorAll("input[type='checkbox']").forEach(el => el.checked = false);
+      document.querySelectorAll("input[type='radio']").forEach(el => { if(el.value==="0") el.checked = true; });
+      document.querySelectorAll("input[id$='_earned']").forEach(el => el.value = "0");
+      document.querySelectorAll("input[type='number']").forEach(el => { if(!el.id.endsWith("_earned")) el.value = "0"; });
+      byId("degreeLevel").value = "0";
+      const specBonus = byId("degreeTeacherUniBonus");
+      if(specBonus) specBonus.checked = false;
+      const personalDegree = byId("personDegreeLevel");
+      if(personalDegree) personalDegree.value = "0";
+      const personalBonus = byId("personDegreeTeacherUniBonus");
+      if(personalBonus) personalBonus.checked = false;
+      const commendType = byId("commendType");
+      if(commendType) commendType.value = "0";
+      byId("targetRank").value = "moarabi";
+      render();
+      scheduleSave();
+    });
+
+    byId("btnPrint").addEventListener("click", () => window.print());
+
+    // مصادر/قوانین
+    setText("rulesVersion", RULES_META.rules_version);
+    const srcUl = byId("sourceList");
+    if(srcUl){
+      srcUl.innerHTML = RULES_META.sources.map(s => `<li>${s}</li>`).join("");
+    }
+
+    // Compute rules integrity hash from meta + scoring arrays (deterministic)
+    const rulesPayload = JSON.stringify({
+      meta: RULES_META,
+      generalItems, specialBehaviorItems, specialProduction, specialResearch,
+      profBehaviorItems, profCoop, awardsRows, commendationRows, expBehaviorItems
+    });
+    setText("rulesHash", fnv1a(rulesPayload));
+
+    // Export JSON rules
+    const btnExport = byId("btnExportRules");
+    if(btnExport){
+      btnExport.addEventListener("click", () => {
+        const blob = new Blob([JSON.stringify({
+          exported_at: nowStr(),
+          meta: RULES_META,
+          data: {
+            generalItems, specialBehaviorItems, specialProduction, specialResearch,
+            profBehaviorItems, profCoop, awardsRows, commendationRows, expBehaviorItems
+          }
+        }, null, 2)], {type: "application/json;charset=utf-8"});
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = "rank_teacher_rules_" + RULES_META.rules_version.replaceAll(".","_") + ".json";
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+      });
+    }
+
+    // Backup / Restore user data
+    const btnExportData = byId("btnExportData");
+    if(btnExportData){
+      btnExportData.addEventListener("click", () => {
+        const state = collectState();
+        const stamp = new Date().toISOString().slice(0,19).replace(/[T:]/g,"-");
+        const blob = new Blob([JSON.stringify(state, null, 2)], {type: "application/json;charset=utf-8"});
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = "teacher_rank_state_" + stamp + ".json";
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        setDataMessage("فایل داده‌ها دانلود شد.", "ok");
+      });
+    }
+
+    const btnImportData = byId("btnImportData");
+    const importFile = byId("importFile");
+    if(btnImportData && importFile){
+      btnImportData.addEventListener("click", () => importFile.click());
+      importFile.addEventListener("change", async () => {
+        const file = importFile.files && importFile.files[0];
+        if(!file) return;
+        try{
+          const text = await file.text();
+          const state = JSON.parse(text);
+          if(!state || (typeof state !== "object")){
+            setDataMessage("فایل انتخاب‌شده معتبر نیست.", "bad");
+            return;
+          }
+          applyState(state);
+          render();
+          saveLocalState();
+          const currentHash = byId("rulesHash") ? byId("rulesHash").textContent : "";
+          let msg = "داده‌ها بارگذاری شد.";
+          let level = "ok";
+          if(state.rulesHash && currentHash && state.rulesHash !== currentHash){
+            msg = "⚠ داده‌ها بارگذاری شد اما قواعد فایل با نسخه فعلی متفاوت است.";
+            level = "warn";
+          }
+          setDataMessage(msg, level);
+        } catch(e){
+          setDataMessage("خواندن فایل ناموفق بود.", "bad");
+        } finally {
+          importFile.value = "";
+        }
+      });
+    }
+
+    const btnClearData = byId("btnClearData");
+    if(btnClearData){
+      btnClearData.addEventListener("click", () => {
+        const storage = getStorage();
+        if(storage){
+          storage.removeItem(STATE_KEY);
+          setText("lastSaved", "—");
+          setDataMessage("ذخیره محلی پاک شد.", "ok");
+        } else {
+          setDataMessage("ذخیره محلی در این مرورگر/اپ در دسترس نیست.", "bad");
+        }
+      });
+    }
+
+    loadLocalState();
+    if(applyPersonalDefaults()) saveLocalState();
+    render();
+  }
+
+  init();
+</script>
+</body>
+</html>

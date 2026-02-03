@@ -43,6 +43,12 @@
       background:#f59e0b;color:#fff;display:inline-flex;align-items:center;gap:6px;
     }
     .help-btn:focus{outline:2px solid rgba(245,158,11,.4);outline-offset:2px;}
+    .select-all-section{
+      cursor:pointer;border:none;border-radius:12px;padding:6px 10px;font-size:12px;font-weight:700;
+      background:#059669;color:#fff;display:inline-flex;align-items:center;gap:4px;
+    }
+    .select-all-section:hover{background:#047857;}
+    .select-all-section:focus{outline:2px solid rgba(5,150,105,.4);outline-offset:2px;}
     .help-box{display:none;margin-top:10px;}
     .help-box.open{display:block;}
     details.notice{border:1px solid var(--border);border-radius:12px;padding:10px;background:#fff;margin-top:8px;}
@@ -116,8 +122,10 @@
       <section id="tab-base" class="tab">
         <div class="grid two">
           <div class="panel">
-            <h2>اطلاعات پایه برای جمع‌بندی</h2>
-            <div class="hint" style="color:var(--accent);font-weight:800">این اطلاعات برای «شرط سنوات» و بخش «تجربه» استفاده می‌شود.</div>
+          <h2>اطلاعات پایه سنوات</h2>
+          <div class="hint" style="color:var(--accent);font-weight:800">
+            اطلاعات پایه سنوات؛ سال و ماه هر خدمت برای «شرط سنوات» و بخش «تجربه» ملاک است.
+          </div>
             <div class="row" style="margin-top:10px">
               <label class="pill">سنوات خدمت (سال):
                 <input class="num" id="yearsService" type="number" min="0" max="60" value="0" />
@@ -213,6 +221,7 @@
                 <span class="badge ok" id="generalSoFar">امتیاز شما تا اینجا: 0</span>
                 <span class="pill"><strong id="generalTotal">0</strong> / 200</span>
                 <button class="help-btn" type="button" data-help="help-general" aria-expanded="false">؟ راهنما</button>
+                <button class="select-all-section" type="button" data-table="tblGeneral">پیش‌بینی کامل</button>
               </div>
             </div>
 
@@ -248,6 +257,7 @@
                 <span class="badge ok" id="specialBehaviorSoFar">امتیاز شما تا اینجا: 0</span>
                 <span class="pill"><strong id="specialBehaviorTotal">0</strong> / 80</span>
                 <button class="help-btn" type="button" data-help="help-special-behavior" aria-expanded="false">؟ راهنما</button>
+                <button class="select-all-section" type="button" data-table="tblSpecialBehavior">پیش‌بینی کامل</button>
               </div>
             </div>
             <table id="tblSpecialBehavior"></table>
@@ -389,6 +399,7 @@
                 <span class="badge ok" id="profBehaviorSoFar">امتیاز شما تا اینجا: 0</span>
                 <span class="pill"><strong id="profBehaviorTotal">0</strong> / 100</span>
                 <button class="help-btn" type="button" data-help="help-prof-behavior" aria-expanded="false">؟ راهنما</button>
+                <button class="select-all-section" type="button" data-table="tblProfBehavior">پیش‌بینی کامل</button>
               </div>
             </div>
             <table id="tblProfBehavior"></table>
@@ -617,6 +628,7 @@
                 <span class="badge ok" id="expBehaviorSoFar">امتیاز شما تا اینجا: 0</span>
                 <span class="pill"><strong id="expBehaviorTotal">0</strong> / 120</span>
                 <button class="help-btn" type="button" data-help="help-exp-behavior" aria-expanded="false">؟ راهنما</button>
+                <button class="select-all-section" type="button" data-table="tblExpBehavior">پیش‌بینی کامل</button>
               </div>
             </div>
             <table id="tblExpBehavior"></table>
@@ -904,6 +916,9 @@
               <span class="badge" id="bestRankBadge">—</span>
               <span class="pill">راهنما: برای احراز رتبه، حداقل امتیاز هر شایستگی + شرط سنوات همزمان باید کامل باشد.</span>
             </div>
+            <div class="small" id="bestRankNote">
+              رتبه بر اساس تکمیل حداقل‌های هر شایستگی به‌صورت جداگانه اندازه‌گیری می‌شود؛ آموزشیار معلم بازهٔ عمومی ۰–۹۹، تخصصی ۰–۱۲۵، حرفه‌ای ۰–۱۴۰ و تجربه ۰–۱۳۴ دارد.
+            </div>
           </div>
 
           <div class="grid two" style="margin-top:10px">
@@ -941,10 +956,28 @@
             <table id="tblEligibility"></table>
           </div>
 
+        <div class="panel" style="margin-top:10px;">
+          <h2>بازه‌های حداقل امتیاز رتبه‌ها</h2>
+          <div class="small">
+            جدول شماره ۵ فایل 
+            <span style="font-weight:800">98329_6_Iq8y1enaA6Q.pdf</span>
+            (صفحه ۱۵) بازه‌های حداقل مربوط به هر رتبه را نمایش می‌دهد.
+          </div>
+          <table>
+            <tr><th>عنوان رتبه</th><th>عمومی</th><th>تخصصی</th><th>حرفه‌ای</th><th>تجربه</th></tr>
+            <tr><td>آموزشیار معلم</td><td>۰ تا ۹۹</td><td>۰ تا ۱۲۵</td><td>۰ تا ۱۴۰</td><td>۰ تا ۱۳۴</td></tr>
+            <tr><td>مربی‌معلم</td><td>۱۰۰–۱۱۹</td><td>۱۲۶–۱۵۰</td><td>۱۴۱–۱۶۵</td><td>۱۳۵–۱۶۴</td></tr>
+            <tr><td>استادیارمعلم</td><td>۱۲۰–۱۳۹</td><td>۱۵۱–۱۷۵</td><td>۱۶۶–۱۹۰</td><td>۱۶۵–۱۹۴</td></tr>
+            <tr><td>دانشیارمعلم</td><td>۱۴۰–۱۵۹</td><td>۱۷۶–۲۰۰</td><td>۱۹۱–۲۱۵</td><td>۱۹۵–۲۲۴</td></tr>
+            <tr><td>استادمعلم</td><td>۱۶۰–۲۰۰</td><td>۲۰۱–۲۵۰</td><td>۲۱۶–۲۷۰</td><td>۲۲۵–۲۸۰</td></tr>
+          </table>
+        </div>
+
           <div class="footerNote">
             چاپ این صفحه به‌عنوان «چک‌لیست» بسیار کاربردی است.
           </div>
         </div>
+
       </section>
 
     </div>
@@ -954,12 +987,54 @@
 <script>
   const clamp = (v, min, max) => Math.min(max, Math.max(min, v));
   // --- Rules meta (based on uploaded official guides) ---
-  const RULES_META = {
+const RULES_META = {
     rules_version: "1404.10.24",
     sources: ["راهنمای_جامع_و_کاربردی_رتبه_بندی_معلمان_1404.pdf", "1- راهنمای بارگذاری مدارک 1404.10.24.pdf", "2-راهنمای اموراداری - 1404.10.24.pdf", "3-راهنمای مدیرمستقیم 1404.10.24.pdf", "4- راهنمای ارزیابان حرفه ای - 1404.10.24.pdf", "5-راهنمای کارشناسان - 1404.10.24.pdf", "6-راهنمای حراست-1404.10.24.pdf", "8-راهنمای هیات های ممیزه -1404.10.24.pdf", "98329_5_Iq8y1enaA6Q.pdf", "98329_6_Iq8y1enaA6Q.pdf", "305968_1_..._140410.pdf"],
     // Note: for maintainability, the scoring tables below are defined in arrays (items) in this file.
     // If official guides are updated, update both the arrays and this version.
-  };
+};
+
+const RANKS_CONFIG = [
+    {
+      name:"آموزشیار معلم",
+      minYears:0,
+      mins:{general:0, special:0, professional:0, experience:0},
+      ranges:{general:"۰ تا ۹۹", special:"۰ تا ۱۲۵", professional:"۰ تا ۱۴۰", experience:"۰ تا ۱۳۴"},
+      effectPercent:45
+    },
+    {
+      name:"مربی‌معلم",
+      minYears:5,
+      mins:{general:100, special:126, professional:141, experience:135},
+      ranges:{general:"۱۰۰–۱۱۹", special:"۱۲۶–۱۵۰", professional:"۱۴۱–۱۶۵", experience:"۱۳۵–۱۶۴"},
+    },
+    {
+      name:"استادیارمعلم",
+      minYears:10,
+      mins:{general:120, special:151, professional:166, experience:165},
+      ranges:{general:"۱۲۰–۱۳۹", special:"۱۵۱–۱۷۵", professional:"۱۶۶–۱۹۰", experience:"۱۶۵–۱۹۴"},
+    },
+    {
+      name:"دانشیارمعلم",
+      minYears:15,
+      mins:{general:140, special:176, professional:191, experience:195},
+      ranges:{general:"۱۴۰–۱۵۹", special:"۱۷۶–۲۰۰", professional:"۱۹۱–۲۱۵", experience:"۱۹۵–۲۲۴"},
+    },
+    {
+      name:"استادمعلم",
+      minYears:21,
+      mins:{general:160, special:201, professional:216, experience:225},
+      ranges:{general:"۱۶۰–۲۰۰", special:"۲۰۱–۲۵۰", professional:"۲۱۶–۲۷۰", experience:"۲۲۵–۲۸۰"},
+    },
+];
+
+const RANKS_CONFIG = [
+    {name:"آموزشیار معلم", minYears:0, mins:{general:0, special:0, professional:0, experience:0}, effectPercent:45},
+    {name:"مربی‌معلم", minYears:5, mins:{general:100, special:126, professional:141, experience:135}},
+    {name:"استادیارمعلم", minYears:10, mins:{general:120, special:151, professional:166, experience:165}},
+    {name:"دانشیارمعلم", minYears:15, mins:{general:140, special:176, professional:191, experience:195}},
+    {name:"استادمعلم", minYears:21, mins:{general:160, special:201, professional:216, experience:225}},
+];
 
   const floor = Math.floor;
   const nowStr = () => new Date().toLocaleString('fa-IR');
@@ -1716,12 +1791,7 @@
     const accelInput = byId("accelEligibleMonths") ? byId("accelEligibleMonths").value : "0";
     const accel = accelInfo(yearsRaw, accelInput);
     const yearsEff = accel.effectiveYears;
-    const ranks = [
-      {name:"مربی‌معلم", minYears:5, mins:{general:100, special:126, professional:141, experience:135}},
-      {name:"استادیارمعلم", minYears:10, mins:{general:120, special:151, professional:166, experience:165}},
-      {name:"دانشیارمعلم", minYears:15, mins:{general:140, special:176, professional:191, experience:195}},
-      {name:"استادمعلم", minYears:21, mins:{general:160, special:201, professional:216, experience:225}},
-    ];
+    const ranks = RANKS_CONFIG;
     const rows = [];
     rows.push(`<tr>
       <th>رتبه</th><th>سنوات</th><th>عمومی</th><th>تخصصی</th><th>حرفه‌ای</th><th>تجربه</th><th>وضعیت</th>
@@ -1738,9 +1808,13 @@
 
       if(okAll) best = r;
 
-      const cell = (ok, need, got) => `<div style="font-weight:900;color:${ok?'#16a34a':'#dc2626'}">${Math.round(got*10)/10} / ${need}</div>`;
+      const cell = (ok, need, got, key) => {
+        const range = (r.ranges && r.ranges[key]) ? r.ranges[key] : need;
+        return `<div style="font-weight:900;color:${ok?'#16a34a':'#dc2626'}">${Math.round(got*10)/10} / ${range}</div>`;
+      };
       const status = okAll ? `<span class="badge ok">قابل احراز</span>` :
                      (!okYears ? `<span class="badge bad">کمبود سنوات</span>` : `<span class="badge warn">نیاز به تکمیل</span>`);
+      const effectLine = r.effectPercent ? `<div class="small inlineOk">اثر در حکم: ${r.effectPercent}%</div>` : "";
 
       const yearsLine = okYears
         ? `<div style="font-weight:900;color:#16a34a">${round1(yearsEff)} ≥ ${r.minYears}</div>`
@@ -1750,11 +1824,11 @@
       rows.push(`<tr>
         <td><b>${r.name}</b></td>
         <td>${yearsLine}${yearsDetail}</td>
-        <td>${cell(okG, r.mins.general, scores.general)}</td>
-        <td>${cell(okS, r.mins.special, scores.special)}</td>
-        <td>${cell(okP, r.mins.professional, scores.professional)}</td>
-        <td>${cell(okE, r.mins.experience, scores.experience)}</td>
-        <td>${status}</td>
+        <td>${cell(okG, r.mins.general, scores.general, "general")}</td>
+        <td>${cell(okS, r.mins.special, scores.special, "special")}</td>
+        <td>${cell(okP, r.mins.professional, scores.professional, "professional")}</td>
+        <td>${cell(okE, r.mins.experience, scores.experience, "experience")}</td>
+        <td>${status}${effectLine}</td>
       </tr>`);
     }
     return {html: rows.join(""), best};
@@ -1800,7 +1874,8 @@
 
     const badge = byId("bestRankBadge");
     if(elig.best){
-      badge.textContent = "بالاترین رتبه قابل احراز (برآورد): " + elig.best.name;
+      const effectText = elig.best.effectPercent ? ` | اثر در حکم: ${elig.best.effectPercent}%` : "";
+      badge.textContent = "بالاترین رتبه قابل احراز (برآورد با امتیازات فعلی): " + elig.best.name + effectText;
       badge.className = "badge ok";
     } else {
       badge.textContent = "با این ورودی‌ها، هنوز حداقل‌ها کامل نیست. جدول را ببینید.";
@@ -1832,7 +1907,30 @@
         if(!isNaN(v) && v > 0) chk.checked = true;
         if(!isNaN(v) && v === 0) chk.checked = false;
         render();
-      });
+    });
+  }
+}
+
+  function fillSectionWithFullScores(tableId){
+    const table = document.getElementById(tableId);
+    if(!table) return;
+    let changed = false;
+    table.querySelectorAll("input[type='checkbox']").forEach(chk => {
+      const max = parseFloat(chk.dataset.max || "0");
+      if(!chk.checked) changed = true;
+      chk.checked = true;
+      const earned = document.getElementById(chk.id.replace("_chk", "_earned"));
+      if(earned){
+        const current = parseFloat(earned.value || "0");
+        if(isNaN(current) || current !== max){
+          earned.value = String(max);
+          changed = true;
+        }
+      }
+    });
+    if(changed){
+      render();
+      scheduleSave();
     }
   }
 
@@ -1851,6 +1949,12 @@
     wireEarnable(specialBehaviorItems, "sb_");
     wireEarnable(profBehaviorItems, "pb_");
     wireEarnable(expBehaviorItems, "eb_");
+
+    document.querySelectorAll(".select-all-section").forEach(btn => {
+      btn.addEventListener("click", () => {
+        fillSectionWithFullScores(btn.dataset.table);
+      });
+    });
 
     document.querySelectorAll(".tabbtn").forEach(btn => {
       btn.addEventListener("click", () => {

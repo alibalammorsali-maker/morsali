@@ -1,0 +1,36 @@
+{
+  "name": "rank-teacher",
+  "version": "1.0.0",
+  "description": "????????? ??????",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder --win portable"
+  },
+  "devDependencies": {
+    "electron": "29.4.6",
+    "electron-builder": "24.13.3"
+  },
+  "build": {
+    "appId": "com.rank.teacher",
+    "productName": "????????? ??????",
+    "asar": true,
+    "compression": "maximum",
+    "files": [
+      "index.html",
+      "renderer.js",
+      "main.js",
+      "help/**/*",
+      "manifest.json",
+      "service-worker.js",
+      "assets/**/*"
+    ],
+    "directories": {
+      "output": "dist"
+    },
+    "win": {
+      "target": "portable"
+    },
+    "artifactName": "rank-teacher-${version}-portable.${ext}"
+  }
+}
